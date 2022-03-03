@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.disofficerssearch;
+package uk.gov.companieshouse.disqualifiedofficers.search;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

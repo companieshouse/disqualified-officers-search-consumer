@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.disofficerssearch;
+package uk.gov.companieshouse.disqualifiedofficers.search;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
