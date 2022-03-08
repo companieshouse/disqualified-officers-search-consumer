@@ -23,6 +23,9 @@
 		<kafka-models.version>1.0.27</kafka-models.version>
 		<ch-kafka.version>1.4.4</ch-kafka.version>
 
+		<!-- Docker -->
+		<jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
+
 		<!--sonar configuration-->
 		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
 			${project.basedir}/target/site/jacoco-it/jacoco.xml
@@ -80,6 +83,12 @@
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+
+				<plugin>
+					<groupId>com.google.cloud.tools</groupId>
+					<artifactId>jib-maven-plugin</artifactId>
+					<version>${jib-maven-plugin.version}</version>
 				</plugin>
 
 				<plugin>
