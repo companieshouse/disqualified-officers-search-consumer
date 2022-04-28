@@ -1,0 +1,57 @@
+{
+  "date_of_birth": "2000-02-18",
+  "disqualifications" : [
+    {
+      "case_identifier" : "INV3975227",
+      "address": {
+        "premise": "3000",
+        "address_line_1": "SYLVESTERucy AVENUE",
+        "address_line_2": "Skewen",
+        "locality": "Neath",
+        "region": "",
+        "country": "Wales",
+        "postal_code": "SA10 6RR"
+      },
+      "company_names" : [
+        "CONSORTIUM TECHNOLOGY LIMITED"
+      ],
+      "court_name" : "Insolvency Service",
+      "disqualification_type" : "court-order",
+      "disqualified_from" : "2015-02-18",
+      "disqualified_until" : "2025-02-17",
+      "heard_on" : "2018-02-14",
+      "undertaken_on" : null,
+      "last_variation":{
+        "varied_on" : "2021-02-17",
+        "case_identifier" : "1",
+        "court_name" : "SWINDLERS"
+      },
+      "reason" : {
+        "act" : "company-directors-disqualification-northern-ireland-order-2002",
+        "description_identifier":"order-disqualifying-a-person-instructing-an-unfit-director-of-an-insolvent-company",
+        "article":"11A"
+      }
+    }
+  ],
+  "etag": "string",
+  "forename": "string",
+  "honours": "string",
+  "kind": "string",
+  "links": {
+    "self": "string"
+  },
+  "nationality": "string",
+  "other_forenames": "string",
+  "permissions_to_act": [
+    {
+      "company_names": [
+        "string"
+      ],
+      "court_name": "string",
+      "expires_on": "2015-02-18",
+      "granted_on": "2025-02-17"
+    }
+  ],
+  "surname": "string",
+  "title": "string"
+}
