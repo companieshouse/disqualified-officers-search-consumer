@@ -15,7 +15,7 @@ public class TestData {
     public static final String CONTEXT_ID = "context_id";
     public static final String RESOURCE_ID = "12345678";
     public static final String RESOURCE_KIND = "disqualified-officers";
-    public static final String CHARGES_RESOURCE_URI = "/disqualified-officers/12345678";
+    public static final String CHARGES_RESOURCE_URI = "/disqualified-officers/natural/12345678";
 
     public ResourceChangedData getResourceChangedData(String fileName) throws IOException {
         EventRecord event = EventRecord.newBuilder()
@@ -29,22 +29,22 @@ public class TestData {
         return createResourceChangedData(event, disqOfficerData);
     }
 
-    private ResourceChangedData createResourceChangedData(EventRecord event, String chargesData) {
+    private ResourceChangedData createResourceChangedData(EventRecord event, String disqOfficerData) {
         return ResourceChangedData.newBuilder()
                 .setContextId(CONTEXT_ID)
                 .setResourceId(RESOURCE_ID)
                 .setResourceKind(RESOURCE_KIND)
                 .setResourceUri(CHARGES_RESOURCE_URI)
-                .setData(chargesData)
+                .setData(disqOfficerData)
                 .setEvent(event)
                 .build();
     }
 
     private String getDisqOfficerData(String filename) throws IOException {
-        InputStreamReader exampleChargesJsonPayload = new InputStreamReader(
+        InputStreamReader exampleDisqOfficerJsonPayload = new InputStreamReader(
                 Objects.requireNonNull(ClassLoader.getSystemClassLoader()
                         .getResourceAsStream(filename)));
-        return FileCopyUtils.copyToString(exampleChargesJsonPayload);
+        return FileCopyUtils.copyToString(exampleDisqOfficerJsonPayload);
     }
 
 }
