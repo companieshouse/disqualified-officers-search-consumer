@@ -3,6 +3,7 @@ package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.Message;
+import uk.gov.companieshouse.disqualifiedofficers.search.processor.ResourceChangedProcessor;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
@@ -11,6 +12,8 @@ public class DisqualifiedOfficersSearchConsumer {
 
     @Autowired
     private Logger logger;
+    @Autowired
+    private ResourceChangedProcessor processor;
 
     /**
      * Receives Main topic messages.
@@ -22,6 +25,7 @@ public class DisqualifiedOfficersSearchConsumer {
     public void receiveMainMessages(Message<ResourceChangedData> message) {
         logger.info("A new message read from MAIN topic with payload: "
                 + message.getPayload());
+        processor.processResourceChanged(message);
     }
 
     /**
@@ -34,5 +38,6 @@ public class DisqualifiedOfficersSearchConsumer {
     public void receiveRetryMessages(Message<ResourceChangedData> message) {
         logger.info(String.format("A new message read from RETRY topic with payload:%s "
                 + "and headers:%s ", message.getPayload(), message.getHeaders()));
+        processor.processResourceChanged(message);
     }
 }
