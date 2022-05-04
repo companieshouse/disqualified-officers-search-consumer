@@ -29,7 +29,7 @@ public class ResourceChangedSerializerTest {
     }
 
     @Test
-    void When_serialize_Expect_chsDeltaBytes() throws Exception {
+    void When_serialize_Expect_ChangedResourceBytes() throws Exception {
         EventRecord eventRecord = new EventRecord("published_at", "type", List.of("fields_changed"));
         ResourceChangedData resourceChangedData = new ResourceChangedData("resource_kind",
                 "resource_uri", "context_id", "resource_id", "data", eventRecord );

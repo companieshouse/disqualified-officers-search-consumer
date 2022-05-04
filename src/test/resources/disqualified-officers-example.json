@@ -1,0 +1,62 @@
+{
+    "company_number": "string", 
+    "country_of_registration": "string", 
+    "date_of_birth": "12-02-1995", 
+    "disqualifications": [
+        {
+            "address": {
+                "address_line_1": "string",
+                "address_line_2": "string",
+                "country": "string",
+                "locality": "string",
+                "postal_code": "string",
+                "premises": "string",
+                "region": "string"
+            },
+            "case_identifier": "string",
+            "company_names": [
+                "string"
+            ],
+            "court_name": "string",
+            "disqualification_type": "string",
+            "disqualified_from": "12-02-2022",
+            "disqualified_until": "12-02-2023",
+            "heard_on": "12-01-2022",
+            "last_variation": [
+                {
+                    "case_identifier": "string",
+                    "court_name": "string",
+                    "varied_on": "10-02-2022"
+                }
+            ],
+            "reason": {
+                "act": "string",
+                "article": "string",
+                "description_identifier": "string"
+            },
+            "undertaken_on": "12-02-2022"
+        }
+    ],
+    "etag": "string",
+    "forename": "string",
+    "honours": "string",
+    "kind": "string",
+    "links": {
+        "self": "string"
+    },
+    "name": "string", 
+    "nationality": "string", 
+    "other_forenames": "string", 
+    "permissions_to_act": [
+        {
+            "company_names": [
+                "string"
+            ],
+            "court_name": "string",
+            "expires_on": "12-02-2023",
+            "granted_on": "12-02-2022"
+        }
+    ],
+    "surname": "string",
+    "title": "string"
+}
