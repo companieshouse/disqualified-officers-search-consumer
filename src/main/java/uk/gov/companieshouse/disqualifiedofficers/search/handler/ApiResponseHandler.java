@@ -2,11 +2,13 @@ package uk.gov.companieshouse.disqualifiedofficers.search.handler;
 
 import java.util.Map;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
 import uk.gov.companieshouse.logging.Logger;
 
+@Component
 public class ApiResponseHandler {
 
     /**

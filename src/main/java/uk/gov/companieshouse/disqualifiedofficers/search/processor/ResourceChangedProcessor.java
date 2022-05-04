@@ -25,6 +25,7 @@ public class ResourceChangedProcessor {
     private final ElasticSearchTransformer transformer;
     private final ApiClientService apiService;
     private final Logger logger;
+    private final ApiResponseHandler apiResponseHandler;
 
     /**
      * Constructor for the changed resource processor.
@@ -34,10 +35,11 @@ public class ResourceChangedProcessor {
      */
     @Autowired
     public ResourceChangedProcessor(ElasticSearchTransformer transformer, Logger logger, 
-            ApiClientService apiService) {
+            ApiClientService apiService, ApiResponseHandler apiResponseHandler) {
         this.transformer = transformer;
         this.apiService = apiService;
         this.logger = logger;
+        this.apiResponseHandler = apiResponseHandler;
     }
 
     public void processResourceChanged(Message<ResourceChangedData> message) {
@@ -60,7 +62,6 @@ public class ResourceChangedProcessor {
                     String.format("Process disqualification for officer with id [%s]", officerId),
                     null);
 
-            ApiResponseHandler apiResponseHandler = new ApiResponseHandler();
             apiResponseHandler.handleResponse(null, HttpStatus.valueOf(response.getStatusCode()),
                     logContext,"Response received from search api", logMap, logger);
         } catch (RetryableErrorException ex) {
