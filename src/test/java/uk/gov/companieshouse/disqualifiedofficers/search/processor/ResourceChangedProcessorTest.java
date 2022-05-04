@@ -6,15 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
+import uk.gov.companieshouse.api.disqualification.DisqualificationLinks;
+import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
 import uk.gov.companieshouse.disqualifiedofficers.search.service.api.ApiClientService;
 import uk.gov.companieshouse.disqualifiedofficers.search.transformer.ElasticSearchTransformer;
 import uk.gov.companieshouse.logging.Logger;
@@ -23,10 +22,6 @@ import uk.gov.companieshouse.stream.ResourceChangedData;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,12 +52,17 @@ public class ResourceChangedProcessorTest {
     @DisplayName("Transforms a kafka message containing a payload into a search api object")
     void When_ValidMessage_Expect_ValidDisqualificationES6Mapping() throws IOException {
         Message<ResourceChangedData> mockChsResourceChangedData = createChsMessage();
+        OfficerDisqualification officerDisqualification = new OfficerDisqualification();
+        DisqualificationLinks links = new DisqualificationLinks();
+        links.setSelf("disqualified-officers/natural/123456789");
+        officerDisqualification.setLinks(links);
         when(transformer.getOfficerDisqualificationFromResourceChanged(
-                mockChsResourceChangedData.getPayload())).thenCallRealMethod();
+                mockChsResourceChangedData.getPayload())).thenReturn(officerDisqualification);
 
         resourceChangedProcessor.processResourceChanged(mockChsResourceChangedData);
 
         verify(transformer).getOfficerDisqualificationFromResourceChanged(mockChsResourceChangedData.getPayload());
+        verify(apiClientService).putDisqualificationSearch("context_id", "123456789", officerDisqualification);
     }
 
     private Message<ResourceChangedData> createChsMessage() throws IOException {
@@ -90,33 +90,5 @@ public class ResourceChangedProcessorTest {
                 .setHeader(KafkaHeaders.RECEIVED_TOPIC, "test")
                 .setHeader("CHANGED_RESOURCE_RETRY_COUNT", 1)
                 .build();
-    }
-
-    @Test
-    void handle200Response() throws NonRetryableErrorException, RetryableErrorException {
-        HttpStatus httpStatus = HttpStatus.OK;
-        Map<String, Object> logMap = new HashMap<>();
-
-        resourceChangedProcessor.handleResponse(
-                ex, httpStatus,"status", "testy test test", logMap, logger );
-        verify(logger).debugContext("status", "testy test test", logMap);
-    }
-
-    @Test
-    void handleBadResponse() throws NonRetryableErrorException, RetryableErrorException {
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        Map<String, Object> logMap = new HashMap<>();
-        assertThrows(NonRetryableErrorException.class, () -> resourceChangedProcessor.handleResponse(
-                ex, httpStatus, "status", "testy test test", logMap, logger));
-        verify(logger).errorContext("status", "testy test test", null, logMap);
-    }
-
-    @Test
-    void handle500Response() throws NonRetryableErrorException, RetryableErrorException {
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        Map<String, Object> logMap = new HashMap<>();
-        assertThrows(RetryableErrorException.class, () -> resourceChangedProcessor.handleResponse(
-                ex, httpStatus, "status", "testy test test", logMap, logger));
-        verify(logger).errorContext("status", "testy test test, retry", null, logMap);
     }
 }
