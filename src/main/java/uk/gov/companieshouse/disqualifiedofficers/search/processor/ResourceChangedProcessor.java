@@ -51,7 +51,7 @@ public class ResourceChangedProcessor {
             OfficerDisqualification elasticSearchData = transformer
                     .getOfficerDisqualificationFromResourceChanged(payload);
 
-            String officerId = Stream.of( elasticSearchData.getLinks().getSelf() )
+            String officerId = Stream.of( elasticSearchData.getLinks().getSelf().split("/") )
                     .reduce( (first,last) -> last ).get();
 
             final ApiResponse<Void> response =
