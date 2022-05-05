@@ -26,7 +26,9 @@ public class DisqualificationItemTransformerTest {
     private static final String COMPANY_ENDING = "Limited";
     private static final String COMPANY_NAME = COMPANY_START + " " + COMPANY_ENDING;
     private static final LocalDate FROM = LocalDate.of(2022, 1, 1);
+    private static final String FROM_STRING = "2022-01-01";
     private static final LocalDate UNTIL = LocalDate.of(2025, 1, 1);
+    private static final String UNTIL_STRING = "2025-01-01";
     private static final Object ADDRESS = new Object();
     private static final String FORENAME = "forename";
     private static final String OTHER_FORENAMES = "other";
@@ -52,8 +54,8 @@ public class DisqualificationItemTransformerTest {
         assertThat(item.getCorporateName()).isEqualTo(COMPANY_NAME);
         assertThat(item.getAddress()).isEqualTo(ADDRESS);
         assertThat(item.getFullAddress()).isEqualTo(ADDRESS_STRING);
-        assertThat(item.getDisqualifiedFrom()).isEqualTo(FROM);
-        assertThat(item.getDisqualifiedUntil()).isEqualTo(UNTIL);
+        assertThat(item.getDisqualifiedFrom()).isEqualTo(FROM_STRING);
+        assertThat(item.getDisqualifiedUntil()).isEqualTo(UNTIL_STRING);
         assertThat(item.getForename()).isEqualTo(FORENAME);
         assertThat(item.getOtherForenames()).isEqualTo(OTHER_FORENAMES);
         assertThat(item.getSurname()).isEqualTo(SURNAME);
