@@ -10,6 +10,8 @@ import uk.gov.companieshouse.disqualifiedofficers.search.utils.AddressUtils;
 import uk.gov.companieshouse.disqualifiedofficers.search.utils.CompanyNameUtils;
 import uk.gov.companieshouse.disqualifiedofficers.search.utils.DisqualifiedPersonName;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class DisqualificationItemTransformer {
 
@@ -32,8 +34,11 @@ public class DisqualificationItemTransformer {
         item.setCorporateStart(companyName.getName());
         item.setCorporateEnding(companyName.getEnding());
 
-        item.setDisqualifiedFrom(disqualification.getDisqualifiedFrom());
-        item.setDisqualifiedUntil(disqualification.getDisqualifiedUntil());
+        DateTimeFormatter dateTimeFormatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        item.setDisqualifiedFrom(disqualification.getDisqualifiedFrom().format(dateTimeFormatter));
+        item.setDisqualifiedUntil(disqualification.getDisqualifiedUntil().format(dateTimeFormatter));
 
         item.setForename(data.getForename());
         item.setSurname(data.getSurname());
