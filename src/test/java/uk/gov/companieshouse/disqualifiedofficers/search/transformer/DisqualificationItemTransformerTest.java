@@ -59,8 +59,8 @@ public class DisqualificationItemTransformerTest {
         assertThat(item.getForename()).isEqualTo(FORENAME);
         assertThat(item.getOtherForenames()).isEqualTo(OTHER_FORENAMES);
         assertThat(item.getSurname()).isEqualTo(SURNAME);
-        assertThat(item.getCorporateStart()).isEqualTo(COMPANY_START);
-        assertThat(item.getCorporateEnding()).isEqualTo(COMPANY_ENDING);
+        assertThat(item.getCorporateNameStart()).isEqualTo(COMPANY_START);
+        assertThat(item.getCorporateNameEnding()).isEqualTo(COMPANY_ENDING);
     }
 
     private Disqualification getDisqualification() {

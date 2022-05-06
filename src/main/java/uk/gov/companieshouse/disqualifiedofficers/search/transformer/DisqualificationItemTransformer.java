@@ -31,8 +31,8 @@ public class DisqualificationItemTransformer {
 
         item.setCorporateName(data.getName());
         CompanyName companyName = companyNameUtils.splitCompanyName(data.getName());
-        item.setCorporateStart(companyName.getName());
-        item.setCorporateEnding(companyName.getEnding());
+        item.setCorporateNameStart(companyName.getName());
+        item.setCorporateNameEnding(companyName.getEnding());
 
         DateTimeFormatter dateTimeFormatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd");
