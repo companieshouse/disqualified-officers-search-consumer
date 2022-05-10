@@ -1,0 +1,60 @@
+{
+  "date_of_birth": "1982-10-10",
+  "disqualifications": [
+    {
+      "address": {
+        "address_line_1": "Arnold Gardens",
+        "address_line_2": "",
+        "country": "England",
+        "locality": "London",
+        "postal_code": "N13 5JE",
+        "premises": "39",
+        "region": "London"
+      },
+      "case_identifier": "INV3975227",
+      "company_names": [
+        "EARNSHAW EQUITIES LIMITED"
+      ],
+      "court_name": "Companies Court - London",
+      "disqualification_type": "ORDER",
+      "disqualified_from": "2015-08-13",
+      "disqualified_until": "2030-08-12",
+      "heard_on": "2015-07-23",
+      "last_variation":
+        {
+          "case_identifier": "INV3975227",
+          "court_name": "Companies Court - London",
+          "varied_on": "2015-07-23"
+        },
+      "reason": {
+        "act": "company-directors-disqualification-act-1986",
+        "article": "string",
+        "description_identifier": "order-or-undertaking-and-reporting-provisions",
+        "section": "7"
+      },
+      "undertaken_on": "2015-07-23"
+    }
+  ],
+  "etag": "0fca075379cc57c44970e74a5cfbe4f8be5b20be",
+  "forename": "Dust",
+  "honours": "",
+  "kind": "searchresults#disqualified-officer",
+  "links": {
+    "self": "/disqualified-officers/natural/hv92jMgpl7e-ttvc5yZXqWiuHbQ"
+  },
+  "nationality": "British",
+  "other_forenames": "",
+  "permissions_to_act": [
+    {
+      "company_names": [
+        "123 LTD",
+        "321 LTD"
+      ],
+      "court_name": "rinder",
+      "expires_on": "2030-08-13",
+      "granted_on": "2019-08-13"
+    }
+  ],
+  "surname": "KINDNESSLIQUOR",
+  "title": "Mr"
+}

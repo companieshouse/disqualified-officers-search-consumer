@@ -1,0 +1,38 @@
+{
+  "items":[
+    {
+      "address":{
+        "address_line_1":"Arnold Gardens",
+        "address_line_2":"",
+        "country":"England",
+        "locality":"London",
+        "postal_code":"N13 5JE",
+        "premises":"39",
+        "region":"London"
+      },
+      "disqualified_from":"2015-08-13",
+      "disqualified_until":"2030-08-12",
+      "wildcard_key":"KINDNESSLIQUOR Dust1",
+      "forename":"Dust",
+      "other_forenames":"",
+      "surname":"KINDNESSLIQUOR",
+      "person_name":"Dust KINDNESSLIQUOR",
+      "full_address":"39 Arnold Gardens, London, London, England, N13 5JE",
+      "corporate_name":null,
+      "corporate_name_ending":null,
+      "corporate_name_start":null,
+      "record_type":"disqualifications",
+      "person_title_name":"Mr Dust KINDNESSLIQUOR"
+    }
+  ],
+  "date_of_birth":{
+    "day":"10",
+    "month":"10",
+    "year":"1982"
+  },
+  "sort_key":"KINDNESSLIQUOR Dust1",
+  "kind":"searchresults#disqualified-officer",
+  "links":{
+    "self":"/disqualified-officers/natural/hv92jMgpl7e-ttvc5yZXqWiuHbQ"
+  }
+}

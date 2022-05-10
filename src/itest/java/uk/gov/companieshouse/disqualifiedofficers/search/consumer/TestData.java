@@ -1,30 +1,30 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
 
-import org.springframework.util.FileCopyUtils;
+import org.apache.commons.io.FileUtils;
+import org.springframework.util.ResourceUtils;
 import uk.gov.companieshouse.stream.EventRecord;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class TestData {
 
     public static final String CHANGED = "changed";
     public static final String CONTEXT_ID = "context_id";
-    public static final String RESOURCE_ID = "12345678";
+    public static final String RESOURCE_ID = "1234567890";
     public static final String RESOURCE_KIND = "disqualified-officers";
-    public static final String CHARGES_RESOURCE_URI = "/disqualified-officers/natural/12345678";
+    public static final String DISQUALIFICATION_RESOURCE_URI = "disqualified-officers/natural/1234567890";
 
     public ResourceChangedData getResourceChangedData(String fileName) throws IOException {
         EventRecord event = EventRecord.newBuilder()
                 .setType(CHANGED)
                 .setPublishedAt("2022-02-22T10:51:30")
-                .setFieldsChanged(Arrays.asList("foo", "moo"))
+                .setFieldsChanged(Arrays.asList("address", "court_name"))
                 .build();
 
-        String disqOfficerData = getDisqOfficerData(fileName);
+        String disqOfficerData = loadFile(fileName);
 
         return createResourceChangedData(event, disqOfficerData);
     }
@@ -34,17 +34,18 @@ public class TestData {
                 .setContextId(CONTEXT_ID)
                 .setResourceId(RESOURCE_ID)
                 .setResourceKind(RESOURCE_KIND)
-                .setResourceUri(CHARGES_RESOURCE_URI)
+                .setResourceUri(DISQUALIFICATION_RESOURCE_URI)
                 .setData(disqOfficerData)
                 .setEvent(event)
                 .build();
     }
 
-    private String getDisqOfficerData(String filename) throws IOException {
-        InputStreamReader exampleDisqOfficerJsonPayload = new InputStreamReader(
-                Objects.requireNonNull(ClassLoader.getSystemClassLoader()
-                        .getResourceAsStream(filename)));
-        return FileCopyUtils.copyToString(exampleDisqOfficerJsonPayload);
+    public String loadFile(String fileName) {
+        try {
+            return FileUtils.readFileToString(ResourceUtils.getFile(fileName), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Unable to locate file %s", fileName));
+        }
     }
 
 }

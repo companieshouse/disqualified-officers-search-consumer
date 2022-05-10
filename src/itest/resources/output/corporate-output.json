@@ -1,0 +1,34 @@
+{
+  "items":[
+    {
+      "address":{
+        "address_line_1":"ArnoldGardens",
+        "address_line_2":"",
+        "country":"England",
+        "locality":"London",
+        "postal_code":"N135JE",
+        "premises":"39",
+        "region":"London"
+      },
+      "disqualified_from":"2015-08-13",
+      "disqualified_until":"2030-08-12",
+      "wildcard_key":"1",
+      "forename":"",
+      "other_forenames":"",
+      "surname":null,
+      "person_name":"",
+      "full_address":"39ArnoldGardens,London,London,England,N135JE",
+      "corporate_name":"KINDNESSLIQUOR",
+      "corporate_name_ending":"",
+      "corporate_name_start":"KINDNESSLIQUOR",
+      "record_type":"disqualifications",
+      "person_title_name":""
+    }
+  ],
+  "date_of_birth":null,
+  "sort_key":"1",
+  "kind":"string",
+  "links":{
+    "self":"/disqualified-officers/corporate/hv92jMgpl7e-ttvc5yZXqWiuHbQ"
+  }
+}
