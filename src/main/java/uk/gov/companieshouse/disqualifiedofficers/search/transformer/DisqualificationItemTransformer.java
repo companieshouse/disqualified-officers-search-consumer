@@ -28,12 +28,10 @@ public class DisqualificationItemTransformer {
         item.setAddress(address);
         item.setFullAddress(addressUtils.getAddressAsString(address));
 
-        item.setCorporateName(data.getName());
-        CompanyName companyName;
-        if (data.getName() != null) {
-            companyName = companyNameUtils.splitCompanyName(data.getName());
-            item.setCorporateNameStart(companyName.getName());
-            item.setCorporateNameEnding(companyName.getEnding());
+        if (data.getName() != null && data.getName().length() > 0) {
+            setCorporateFields(item, data);
+        } else {
+            setPersonFields(item, data);
         }
 
         DateTimeFormatter dateTimeFormatter =
@@ -42,6 +40,19 @@ public class DisqualificationItemTransformer {
         item.setDisqualifiedFrom(disqualification.getDisqualifiedFrom().format(dateTimeFormatter));
         item.setDisqualifiedUntil(disqualification.getDisqualifiedUntil().format(dateTimeFormatter));
 
+        item.setRecordType(recordType);
+
+        return item;
+    }
+
+    private void setCorporateFields(Item item, StreamData data) {
+        item.setCorporateName(data.getName());
+        CompanyName companyName = companyNameUtils.splitCompanyName(data.getName());
+        item.setCorporateNameStart(companyName.getName());
+        item.setCorporateNameEnding(companyName.getEnding());
+    }
+
+    private void setPersonFields(Item item, StreamData data) {
         item.setForename(data.getForename());
         item.setSurname(data.getSurname());
         item.setOtherForenames(data.getOtherForenames());
@@ -50,8 +61,6 @@ public class DisqualificationItemTransformer {
                 data.getTitle(), data.getForename(), data.getOtherForenames(), data.getSurname());
         item.setPersonTitleName(personName.getPersonTitleName());
         item.setPersonName(personName.getPersonName());
-        item.setRecordType(recordType);
         item.setWildcardKey(personName.getWildcardKey());
-        return item;
     }
 }
