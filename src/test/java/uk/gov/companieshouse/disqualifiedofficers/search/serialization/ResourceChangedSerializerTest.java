@@ -3,7 +3,9 @@ package uk.gov.companieshouse.disqualifiedofficers.search.serialization;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.stream.EventRecord;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
@@ -13,6 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class ResourceChangedSerializerTest {
+
+    @Mock
+    Logger logger;
 
     private static final byte[] expected = {26, 114, 101, 115, 111, 117, 114, 99, 101, 95, 107,
             105, 110, 100, 24, 114, 101, 115, 111, 117, 114, 99, 101, 95, 117, 114, 105, 20, 99,
@@ -25,7 +30,7 @@ public class ResourceChangedSerializerTest {
 
     @BeforeEach
     public void init() {
-        serializer = new ResourceChangedSerializer();
+        serializer = new ResourceChangedSerializer(logger);
     }
 
     @Test
