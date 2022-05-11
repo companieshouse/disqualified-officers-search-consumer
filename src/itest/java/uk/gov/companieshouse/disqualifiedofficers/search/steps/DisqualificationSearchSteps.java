@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.steps;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import io.cucumber.java.en.Given;
@@ -85,9 +87,11 @@ public class DisqualificationSearchSteps {
         ServeEvent serveEvent = allServeEvents.get(0);
         String actualBody = serveEvent.getRequest().getBodyAsString();
 
+        JsonNode expectedTree = convertToJson(expectedBody);
+        JsonNode actualTree = convertToJson(actualBody);
+
         assertThat(serveEvent.getResponse().getStatus()).isEqualTo(200);
-        assertThat(actualBody.replace(" ", ""))
-                .isEqualTo(expectedBody.replace("\n", "").replace(" ", ""));
+        assertThat(actualTree).isEqualTo(expectedTree);
     }
 
     private void configureWiremock() {
@@ -110,6 +114,17 @@ public class DisqualificationSearchSteps {
     private List<ServeEvent> getServeEvents() {
         return wireMockServer != null ? wireMockServer.getAllServeEvents() :
                 new ArrayList<>();
+    }
+
+    private JsonNode convertToJson(String data) {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode json = mapper.createObjectNode();
+        try {
+            json = mapper.readTree(data);
+        } catch(Exception e) {
+            logger.error("Error converting to JSON: " + e.getMessage());
+        }
+        return json;
     }
 }
 

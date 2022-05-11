@@ -2,11 +2,11 @@
   "items":[
     {
       "address":{
-        "address_line_1":"ArnoldGardens",
+        "address_line_1":"Arnold Gardens",
         "address_line_2":"",
         "country":"England",
         "locality":"London",
-        "postal_code":"N135JE",
+        "postal_code":"N13 5JE",
         "premises":"39",
         "region":"London"
       },
@@ -17,7 +17,7 @@
       "other_forenames":"",
       "surname":null,
       "person_name":"",
-      "full_address":"39ArnoldGardens,London,London,England,N135JE",
+      "full_address":"39 Arnold Gardens, London, London, England, N13 5JE",
       "corporate_name":"KINDNESSLIQUOR",
       "corporate_name_ending":"",
       "corporate_name_start":"KINDNESSLIQUOR",
