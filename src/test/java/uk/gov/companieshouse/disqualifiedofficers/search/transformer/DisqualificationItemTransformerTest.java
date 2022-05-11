@@ -44,14 +44,12 @@ public class DisqualificationItemTransformerTest {
     @BeforeEach
     public void setup() {
         when(addressUtils.getAddressAsString(ADDRESS)).thenReturn(ADDRESS_STRING);
-        when(companyNameUtils.splitCompanyName(COMPANY_NAME)).thenReturn(new CompanyName(COMPANY_START, COMPANY_ENDING));
     }
 
     @Test
-    public void itemIsTransformed() {
-        Item item = transformer.getItemFromDisqualification(getDisqualification(), getData());
+    public void personItemIsTransformed() {
+        Item item = transformer.getItemFromDisqualification(getDisqualification(), getData(true));
 
-        assertThat(item.getCorporateName()).isEqualTo(COMPANY_NAME);
         assertThat(item.getAddress()).isEqualTo(ADDRESS);
         assertThat(item.getFullAddress()).isEqualTo(ADDRESS_STRING);
         assertThat(item.getDisqualifiedFrom()).isEqualTo(FROM_STRING);
@@ -59,8 +57,23 @@ public class DisqualificationItemTransformerTest {
         assertThat(item.getForename()).isEqualTo(FORENAME);
         assertThat(item.getOtherForenames()).isEqualTo(OTHER_FORENAMES);
         assertThat(item.getSurname()).isEqualTo(SURNAME);
+        assertThat(item.getWildcardKey()).isEqualTo(SURNAME + " " + FORENAME + " " + OTHER_FORENAMES + "1");
+    }
+
+    @Test
+    public void corporateItemIsTransformer() {
+        when(companyNameUtils.splitCompanyName(COMPANY_NAME)).thenReturn(new CompanyName(COMPANY_START, COMPANY_ENDING));
+
+        Item item = transformer.getItemFromDisqualification(getDisqualification(), getData(false));
+
+        assertThat(item.getCorporateName()).isEqualTo(COMPANY_NAME);
+        assertThat(item.getAddress()).isEqualTo(ADDRESS);
+        assertThat(item.getFullAddress()).isEqualTo(ADDRESS_STRING);
+        assertThat(item.getDisqualifiedFrom()).isEqualTo(FROM_STRING);
+        assertThat(item.getDisqualifiedUntil()).isEqualTo(UNTIL_STRING);
         assertThat(item.getCorporateNameStart()).isEqualTo(COMPANY_START);
         assertThat(item.getCorporateNameEnding()).isEqualTo(COMPANY_ENDING);
+        assertThat(item.getWildcardKey()).isNull();
     }
 
     private Disqualification getDisqualification() {
@@ -71,12 +84,16 @@ public class DisqualificationItemTransformerTest {
         return disq;
     }
 
-    private StreamData getData() {
+    private StreamData getData(boolean isPerson) {
         StreamData data = new StreamData();
-        data.setName(COMPANY_NAME);
-        data.setForename(FORENAME);
-        data.setOtherForenames(OTHER_FORENAMES);
-        data.setSurname(SURNAME);
+
+        if (isPerson) {
+            data.setForename(FORENAME);
+            data.setOtherForenames(OTHER_FORENAMES);
+            data.setSurname(SURNAME);
+        } else {
+            data.setName(COMPANY_NAME);
+        }
         return data;
     }
 
