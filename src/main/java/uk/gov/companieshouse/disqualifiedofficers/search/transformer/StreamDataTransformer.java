@@ -15,7 +15,7 @@ public class StreamDataTransformer {
         try {
             return mapper.readValue(data, StreamData.class);
         } catch (Exception e) {
-            LoggingConfig.getLogger().trace(e.getMessage());
+            LoggingConfig.getLogger().error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
