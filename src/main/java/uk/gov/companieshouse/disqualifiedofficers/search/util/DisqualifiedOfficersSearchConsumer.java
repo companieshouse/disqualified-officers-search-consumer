@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
+package uk.gov.companieshouse.disqualifiedofficers.search.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;

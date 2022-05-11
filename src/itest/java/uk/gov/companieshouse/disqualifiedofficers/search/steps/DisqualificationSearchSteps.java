@@ -8,7 +8,7 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import uk.gov.companieshouse.disqualifiedofficers.search.consumer.TestData;
+import uk.gov.companieshouse.disqualifiedofficers.search.util.TestData;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 

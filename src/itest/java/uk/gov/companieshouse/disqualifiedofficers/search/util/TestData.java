@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
+package uk.gov.companieshouse.disqualifiedofficers.search.util;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.util.ResourceUtils;
