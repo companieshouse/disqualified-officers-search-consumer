@@ -26,7 +26,7 @@ public class ElasticSearchTransformer {
         for(Disqualification disqualification : in.getDisqualifications()) {
             out.addItemsItem(disqualificationItemTransformer.getItemFromDisqualification(disqualification, in));
         }
-        out.setDateOfBirth(getDateOfBirth(in));
+        if (in.getDateOfBirth() != null) out.setDateOfBirth(getDateOfBirth(in));
         out.setLinks(in.getLinks());
         out.setKind(in.getKind());
         out.setSortKey(out.getItems().get(0).getWildcardKey());

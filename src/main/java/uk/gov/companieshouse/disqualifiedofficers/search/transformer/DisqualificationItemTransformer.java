@@ -24,15 +24,17 @@ public class DisqualificationItemTransformer {
 
     public Item getItemFromDisqualification(Disqualification disqualification, StreamData data) {
         Item item = new Item();
-
         Object address = disqualification.getAddress();
         item.setAddress(address);
         item.setFullAddress(addressUtils.getAddressAsString(address));
 
         item.setCorporateName(data.getName());
-        CompanyName companyName = companyNameUtils.splitCompanyName(data.getName());
-        item.setCorporateNameStart(companyName.getName());
-        item.setCorporateNameEnding(companyName.getEnding());
+        CompanyName companyName;
+        if (data.getName() != null) {
+            companyName = companyNameUtils.splitCompanyName(data.getName());
+            item.setCorporateNameStart(companyName.getName());
+            item.setCorporateNameEnding(companyName.getEnding());
+        }
 
         DateTimeFormatter dateTimeFormatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd");

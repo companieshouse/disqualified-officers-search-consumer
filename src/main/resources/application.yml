@@ -14,7 +14,7 @@ springfox:
 
 spring:
   kafka:
-    bootstrap-servers: ${STREAMING_KAFKA_BROKER_URL:localhost:29092}
+    bootstrap-servers: ${STREAMING_KAFKA_BROKER_URL:localhost:9092}
 
 api:
   search-api-key: ${SEARCH_API_KEY:localhost}
@@ -32,3 +32,7 @@ disqualified-officers:
 
 logger:
   namespace: disqualified-officers-search-consumer
+
+wiremock:
+  server:
+    port: 8888
