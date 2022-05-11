@@ -27,7 +27,7 @@ public class ResourceChangedSerializer implements Serializer<ResourceChangedData
             AvroSerializer<ResourceChangedData> avroSerializer =
                     new AvroSerializer<>(writer, encoderFactory);
 
-                    return avroSerializer.toBinary(payload);
+            return avroSerializer.toBinary(payload);
         } catch (Exception ex) {
             throw new SerializationException("Serialization exception while "
                     + "writing to byte array", ex);
