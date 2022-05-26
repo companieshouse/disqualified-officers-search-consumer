@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DisqualificationSearchSteps {
 
-    @Value("${disqualified-officers.search.topic.main}")
+    @Value("${disqualified-officers.search.topic}")
     private String mainTopic;
 
     @Value("${wiremock.server.port}")

@@ -24,11 +24,9 @@ api:
 disqualified-officers:
   search:
     group-id: disqualified-officers-search-consumer
-    main-id: disqualified-officers-main-search-consumer
-    retry-id: disqualified-officers-retry-search-consumer
-    topic:
-      main: stream-disqualifications
-      retry: stream-disqualifications-retry
+    retry-attempts: 4
+    backoff-delay: 100
+    topic: stream-disqualifications
 
 logger:
   namespace: disqualified-officers-search-consumer

@@ -20,6 +20,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
+import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableTopicErrorInterceptor;
 import uk.gov.companieshouse.disqualifiedofficers.search.serialization.ResourceChangedDeserializer;
 import uk.gov.companieshouse.disqualifiedofficers.search.serialization.ResourceChangedSerializer;
 import uk.gov.companieshouse.stream.ResourceChangedData;
@@ -65,6 +66,8 @@ public class KafkaConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 ResourceChangedDeserializer.class);
+        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
+                RetryableTopicErrorInterceptor.class.getName());
         return new DefaultKafkaProducerFactory<>(
                 props, new StringSerializer(), resourceChangedSerializer);
     }
@@ -104,8 +107,3 @@ public class KafkaConfig {
         return props;
     }
 }
-
-
-
-
-

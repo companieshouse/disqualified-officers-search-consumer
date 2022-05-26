@@ -43,16 +43,22 @@ public class ResourceChangedProcessor {
     }
 
     public void processResourceChanged(Message<ResourceChangedData> message) {
-            final Map<String, Object> logMap = new HashMap<>();
-            ResourceChangedData payload = message.getPayload();
-            final String logContext = payload.getContextId();
+        final Map<String, Object> logMap = new HashMap<>();
+        ResourceChangedData payload = message.getPayload();
+        final String logContext = payload.getContextId();
 
+        OfficerDisqualification elasticSearchData;
 
-            OfficerDisqualification elasticSearchData = transformer
+        try {
+             elasticSearchData = transformer
                     .getOfficerDisqualificationFromResourceChanged(payload);
+        }  catch (Exception ex) {
+            throw new RetryableErrorException(
+                    "Error when extracting disqualified-officers delta", ex);
+        }
 
-            String officerId = Stream.of( elasticSearchData.getLinks().getSelf().split("/") )
-                    .reduce( (first,last) -> last ).get();
+        String officerId = Stream.of( elasticSearchData.getLinks().getSelf().split("/") )
+            .reduce( (first,last) -> last ).get();
 
         try {
             final ApiResponse<Void> response =
