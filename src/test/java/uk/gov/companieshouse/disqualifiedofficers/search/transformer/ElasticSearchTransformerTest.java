@@ -11,12 +11,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.disqualification.Disqualification;
 import uk.gov.companieshouse.api.disqualification.Item;
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
+import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
+import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.model.StreamData;
+import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -30,20 +34,23 @@ public class ElasticSearchTransformerTest {
 
     @Mock
     DisqualificationItemTransformer itemTransformer;
+    @Mock
+    Logger logger;
     @InjectMocks
     ElasticSearchTransformer transformer;
 
     @BeforeEach
     private void setup() throws Exception {
         setStreamTransformer();
-        when(itemTransformer.getItemFromDisqualification(
-                any(Disqualification.class), any(StreamData.class))).thenReturn(getItem());
     }
 
     @Test
-    public void transformsData() throws Exception {
+    void transformsData() throws Exception {
+        when(itemTransformer.getItemFromDisqualification(
+                any(Disqualification.class), any(StreamData.class))).thenReturn(getItem());
+
         OfficerDisqualification actual = transformer
-                .getOfficerDisqualificationFromResourceChanged(getResourceChangedData());
+                .getOfficerDisqualificationFromResourceChanged(getResourceChangedData(true));
 
         assertThat(actual.getDateOfBirth().getDay()).isEqualTo("01");
         assertThat(actual.getDateOfBirth().getMonth()).isEqualTo("01");
@@ -55,7 +62,27 @@ public class ElasticSearchTransformerTest {
         assertThat(actual.getItems().get(0).getWildcardKey()).isEqualTo(KEY);
     }
 
-    private ResourceChangedData getResourceChangedData() throws Exception {
+    @Test
+    void throwsRetryableExceptionIfTransformErrors() {
+        when(itemTransformer.getItemFromDisqualification(
+                any(Disqualification.class), any(StreamData.class))).thenThrow(new RuntimeException());
+
+        RetryableErrorException thrown = assertThrows(RetryableErrorException.class,
+                () -> transformer.getOfficerDisqualificationFromResourceChanged(getResourceChangedData(true)));
+
+        assertThat(thrown.getMessage()).isEqualTo("Error when transforming stream data");
+    }
+
+    @Test
+    void throwsNonRetryableExceptionInvalidData() {
+
+        NonRetryableErrorException thrown = assertThrows(NonRetryableErrorException.class,
+                () -> transformer.getOfficerDisqualificationFromResourceChanged(getResourceChangedData(false)));
+
+        assertThat(thrown.getMessage()).isEqualTo("Error when extracting stream data");
+    }
+
+    private ResourceChangedData getResourceChangedData(boolean valid) throws Exception {
         String streamData = new JSONObject()
                 .put("date_of_birth", DATE_OF_BIRTH)
                 .put("disqualifications", new JSONArray().put(new JSONObject()))
@@ -63,7 +90,7 @@ public class ElasticSearchTransformerTest {
                 .put("kind", KIND)
                 .toString();
         ResourceChangedData data = new ResourceChangedData();
-        data.setData(streamData);
+        data.setData(valid ? streamData : "Invalid");
         return data;
     }
 
@@ -76,6 +103,6 @@ public class ElasticSearchTransformerTest {
     private void setStreamTransformer() throws Exception {
         Field privateField = transformer.getClass().getDeclaredField("streamDataTransformer");
         privateField.setAccessible(true);
-        privateField.set(transformer, new StreamDataTransformer());
+        privateField.set(transformer, new StreamDataTransformer(logger));
     }
 }

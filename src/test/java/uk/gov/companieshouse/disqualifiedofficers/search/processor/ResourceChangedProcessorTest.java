@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import uk.gov.companieshouse.api.disqualification.DisqualificationLinks;
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
-import uk.gov.companieshouse.disqualifiedofficers.search.handler.ApiResponseHandler;
 import uk.gov.companieshouse.disqualifiedofficers.search.service.api.ApiClientService;
 import uk.gov.companieshouse.disqualifiedofficers.search.transformer.ElasticSearchTransformer;
 import uk.gov.companieshouse.logging.Logger;
@@ -30,7 +29,6 @@ import static org.mockito.Mockito.when;
 public class ResourceChangedProcessorTest {
 
     private ResourceChangedProcessor resourceChangedProcessor;
-    private ApiResponseHandler apiResponseHandler;
     @Mock
     private ElasticSearchTransformer transformer;
     @Mock
@@ -43,12 +41,10 @@ public class ResourceChangedProcessorTest {
 
     @BeforeEach
     void setUp() {
-        apiResponseHandler = new ApiResponseHandler();
         resourceChangedProcessor = new ResourceChangedProcessor(
                 transformer,
                 logger,
-                apiClientService,
-                apiResponseHandler
+                apiClientService
         );
     }
 

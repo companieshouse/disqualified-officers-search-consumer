@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.disqualification.DateOfBirth;
 import uk.gov.companieshouse.api.disqualification.Disqualification;
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
+import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.model.StreamData;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
@@ -18,12 +19,17 @@ public class ElasticSearchTransformer {
 
     public OfficerDisqualification getOfficerDisqualificationFromResourceChanged(ResourceChangedData data) {
         StreamData streamData = streamDataTransformer.getStreamDataFromString(data.getData());
-        return getOfficerDisqualificationFromStreamData(streamData);
+        try {
+           return getOfficerDisqualificationFromStreamData(streamData);
+        } catch (Exception ex) {
+            throw new RetryableErrorException(
+                    "Error when transforming stream data", ex);
+        }
     }
 
     private OfficerDisqualification getOfficerDisqualificationFromStreamData(StreamData in) {
         OfficerDisqualification out = new OfficerDisqualification();
-        for(Disqualification disqualification : in.getDisqualifications()) {
+        for (Disqualification disqualification : in.getDisqualifications()) {
             out.addItemsItem(disqualificationItemTransformer.getItemFromDisqualification(disqualification, in));
         }
         if (in.getDateOfBirth() != null) out.setDateOfBirth(getDateOfBirth(in));

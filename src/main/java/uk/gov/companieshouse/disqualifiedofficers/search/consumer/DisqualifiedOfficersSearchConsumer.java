@@ -3,6 +3,7 @@ package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.kafka.retrytopic.FixedDelayStrategy;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -22,6 +23,8 @@ public class DisqualifiedOfficersSearchConsumer {
     private Logger logger;
     @Autowired
     private ResourceChangedProcessor processor;
+    @Autowired
+    public KafkaTemplate<String, Object> kafkaTemplate;
 
     /**
      * Receives Main topic messages.
@@ -40,6 +43,12 @@ public class DisqualifiedOfficersSearchConsumer {
                                     @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         logger.info("A new message read from" + topic + " topic with payload: "
                 + message.getPayload());
-        processor.processResourceChanged(message);
+        try {
+            processor.processResourceChanged(message);
+        } catch (Exception exception) {
+            logger.error(String.format("Exception occurred while processing the topic: %s "
+                    + "with message: %s", topic, message), exception);
+            throw exception;
+        }
     }
 }
