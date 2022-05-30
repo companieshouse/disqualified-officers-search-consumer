@@ -1,0 +1,26 @@
+{
+  "date_of_birth": "1982-10-10",
+  "disqualifications": [],
+  "etag": "0fca075379cc57c44970e74a5cfbe4f8be5b20be",
+  "forename": "Dust",
+  "honours": "",
+  "kind": "searchresults#disqualified-officer",
+  "links": {
+    "self": "/disqualified-officers/natural/hv92jMgpl7e-ttvc5yZXqWiuHbQ"
+  },
+  "nationality": "British",
+  "other_forenames": "",
+  "permissions_to_act": [
+    {
+      "company_names": [
+        "123 LTD",
+        "321 LTD"
+      ],
+      "court_name": "rinder",
+      "expires_on": "2030-08-13",
+      "granted_on": "2019-08-13"
+    }
+  ],
+  "surname": "KINDNESSLIQUOR",
+  "title": "Mr"
+}
