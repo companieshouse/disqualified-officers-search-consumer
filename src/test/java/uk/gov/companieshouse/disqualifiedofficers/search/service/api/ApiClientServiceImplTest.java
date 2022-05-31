@@ -39,7 +39,7 @@ class ApiClientServiceImplTest {
     }
 
     @Test
-    void putDisqualificationSearch() throws ApiErrorResponseException, URIValidationException {
+    void putDisqualificationSearch() {
         final ApiResponse<Void> expectedResponse = new ApiResponse<>(HttpStatus.OK.value(), null, null);
         ApiClientServiceImpl apiClientServiceSpy = Mockito.spy(apiClientService);
         doReturn(expectedResponse).when(apiClientServiceSpy).executeOp(anyString(), anyString(),

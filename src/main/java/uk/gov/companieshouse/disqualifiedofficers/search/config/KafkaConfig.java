@@ -60,12 +60,12 @@ public class KafkaConfig {
      * Kafka Producer Factory.
      */
     @Bean
-    public ProducerFactory<String, ResourceChangedData> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                ResourceChangedDeserializer.class);
+                ResourceChangedSerializer.class);
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
                 RetryableTopicErrorInterceptor.class.getName());
         return new DefaultKafkaProducerFactory<>(
@@ -73,7 +73,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, ResourceChangedData> kafkaTemplate() {
+    public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 

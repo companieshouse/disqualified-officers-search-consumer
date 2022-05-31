@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 import uk.gov.companieshouse.stream.EventRecord;
 
@@ -47,6 +48,6 @@ class ResourceChangedDeserializerTest {
     @Test
     void When_deserializeFails_throwsSerializationError() {
         byte[] data = "Invalid message".getBytes();
-        assertThrows(SerializationException.class, () -> deserializer.deserialize("", data));
+        assertThrows(NonRetryableErrorException.class, () -> deserializer.deserialize("", data));
     }
 }

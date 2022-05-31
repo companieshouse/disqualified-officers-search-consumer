@@ -1,10 +1,6 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.processor;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Stream;
-
-import org.springframework.http.HttpStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -12,8 +8,6 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
-import uk.gov.companieshouse.disqualifiedofficers.search.handler.ApiResponseHandler;
 import uk.gov.companieshouse.disqualifiedofficers.search.service.api.ApiClientService;
 import uk.gov.companieshouse.disqualifiedofficers.search.transformer.ElasticSearchTransformer;
 import uk.gov.companieshouse.logging.Logger;
@@ -25,7 +19,6 @@ public class ResourceChangedProcessor {
     private final ElasticSearchTransformer transformer;
     private final ApiClientService apiService;
     private final Logger logger;
-    private final ApiResponseHandler apiResponseHandler;
 
     /**
      * Constructor for the changed resource processor.
@@ -35,53 +28,32 @@ public class ResourceChangedProcessor {
      */
     @Autowired
     public ResourceChangedProcessor(ElasticSearchTransformer transformer, Logger logger, 
-            ApiClientService apiService, ApiResponseHandler apiResponseHandler) {
+            ApiClientService apiService) {
         this.transformer = transformer;
         this.apiService = apiService;
         this.logger = logger;
-        this.apiResponseHandler = apiResponseHandler;
     }
 
     public void processResourceChanged(Message<ResourceChangedData> message) {
-        final Map<String, Object> logMap = new HashMap<>();
         ResourceChangedData payload = message.getPayload();
         final String logContext = payload.getContextId();
 
-        OfficerDisqualification elasticSearchData;
+        OfficerDisqualification elasticSearchData = transformer
+                .getOfficerDisqualificationFromResourceChanged(payload);
 
-        try {
-             elasticSearchData = transformer
-                    .getOfficerDisqualificationFromResourceChanged(payload);
-        }  catch (Exception ex) {
-            throw new RetryableErrorException(
-                    "Error when extracting disqualified-officers delta", ex);
-        }
 
         String officerId = Stream.of( elasticSearchData.getLinks().getSelf().split("/") )
             .reduce( (first,last) -> last ).get();
 
-        try {
-            final ApiResponse<Void> response =
-                    apiService.putDisqualificationSearch(logContext, officerId, elasticSearchData);
-            logger.infoContext(
-                    logContext,
-                    String.format("Process disqualification for officer with id [%s]", officerId),
-                    null);
 
-            apiResponseHandler.handleResponse(null, HttpStatus.valueOf(response.getStatusCode()),
-                    logContext,"Response received from search api", logMap, logger);
-        } catch (RetryableErrorException ex) {
-            retryResourceChangedMessage(message);
-        } catch (Exception ex) {
-            handleErrorMessage(message);
-            // send to error topic
-        }
-    }
+        final ApiResponse<Void> response =
+                apiService.putDisqualificationSearch(logContext, officerId, elasticSearchData);
 
-    public void retryResourceChangedMessage(Message<ResourceChangedData> message) {
-    }
+        logger.infoContext(
+                logContext,
+                String.format("Process disqualification for officer with id [%s]", officerId),
+                null);
 
-    private void handleErrorMessage(Message<ResourceChangedData> message) {
     }
 
 }
