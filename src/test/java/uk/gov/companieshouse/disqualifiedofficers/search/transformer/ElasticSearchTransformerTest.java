@@ -29,7 +29,6 @@ public class ElasticSearchTransformerTest {
 
     private static final String DATE_OF_BIRTH = "2000-01-01";
     private static final String LINK = "Link";
-    private static final String KIND = "Kind";
     private static final String KEY = "key";
 
     @Mock
@@ -55,7 +54,7 @@ public class ElasticSearchTransformerTest {
         assertThat(actual.getDateOfBirth().getDay()).isEqualTo("01");
         assertThat(actual.getDateOfBirth().getMonth()).isEqualTo("01");
         assertThat(actual.getDateOfBirth().getYear()).isEqualTo("2000");
-        assertThat(actual.getKind()).isEqualTo(KIND);
+        assertThat(actual.getKind()).isEqualTo("searchresults#disqualified-officer");
         assertThat(actual.getLinks().getSelf()).isEqualTo(LINK);
         assertThat(actual.getSortKey()).isEqualTo(KEY);
         assertThat(actual.getItems().size()).isEqualTo(1);
@@ -87,7 +86,6 @@ public class ElasticSearchTransformerTest {
                 .put("date_of_birth", DATE_OF_BIRTH)
                 .put("disqualifications", new JSONArray().put(new JSONObject()))
                 .put("links", new JSONObject().put("self", LINK))
-                .put("kind", KIND)
                 .toString();
         ResourceChangedData data = new ResourceChangedData();
         data.setData(valid ? streamData : "Invalid");

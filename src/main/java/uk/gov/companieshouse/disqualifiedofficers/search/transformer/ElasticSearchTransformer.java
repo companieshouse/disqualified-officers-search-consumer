@@ -12,6 +12,8 @@ import uk.gov.companieshouse.stream.ResourceChangedData;
 @Component
 public class ElasticSearchTransformer {
 
+    private static final String RESOURCE_KIND = "searchresults#disqualified-officer";
+
     @Autowired
     private StreamDataTransformer streamDataTransformer;
     @Autowired
@@ -34,7 +36,7 @@ public class ElasticSearchTransformer {
         }
         if (in.getDateOfBirth() != null) out.setDateOfBirth(getDateOfBirth(in));
         out.setLinks(in.getLinks());
-        out.setKind(in.getKind());
+        out.setKind(RESOURCE_KIND);
         out.setSortKey(out.getItems().get(0).getWildcardKey());
         return out;
     }
