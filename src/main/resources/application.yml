@@ -17,7 +17,7 @@ spring:
     bootstrap-servers: ${STREAMING_KAFKA_BROKER_URL:localhost:9092}
 
 api:
-  search-api-key: ${SEARCH_API_KEY:localhost}
+  search-api-key: ${CHS_API_KEY:apikey}
   api-url: ${API_URL:http://localhost:8888}
   internal-api-url: ${INTERNAL_API_URL:localhost}
 
