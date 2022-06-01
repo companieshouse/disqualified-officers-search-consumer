@@ -27,7 +27,7 @@
   ],
   "date_of_birth":null,
   "sort_key":null,
-  "kind":"string",
+  "kind":"searchresults#disqualified-officer",
   "links":{
     "self":"/disqualified-officers/corporate/hv92jMgpl7e-ttvc5yZXqWiuHbQ"
   }
