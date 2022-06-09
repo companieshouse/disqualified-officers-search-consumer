@@ -16,9 +16,15 @@ public interface ApiClientService {
     /**
      * Submit disqualification.
      */
-
     ApiResponse<Void> putDisqualificationSearch(
             final String log,
             final String officerId,
             final OfficerDisqualification officerDisqualification);
+
+    /**
+     * Delete disqualification.
+     */
+    ApiResponse<Void> deleteDisqualificationSearch(
+            final String log,
+            final String officerId);
 }

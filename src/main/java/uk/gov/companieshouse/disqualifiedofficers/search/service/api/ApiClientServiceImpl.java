@@ -64,9 +64,22 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
         logger.infoContext(log, String.format("PUT %s", uri), logMap);
 
         return executeOp(log, "putDisqualificationSearch", uri,
-                getApiClient(log).privateSearchUpsertHandler()
+                getApiClient(log).privateSearchResourceHandler()
                         .putSearchDisqualification()
                         .upsert(uri, officerDisqualification));
+    }
+
+    @Override
+    public ApiResponse<Void> deleteDisqualificationSearch(final String log, String officerId) {
+        final String uri = String.format("/disqualified-search/delete/%s", officerId);
+
+        Map<String, Object> logMap = createLogMap(officerId, "DELETE", uri);
+        logger.infoContext(log, String.format("DELETE %s", uri), logMap);
+
+        return executeOp(log, "deleteDisqualificationSearch", uri,
+                getApiClient(log).privateSearchResourceHandler()
+                        .deleteSearchDisqualification()
+                        .delete(uri));
     }
 
     private Map<String, Object> createLogMap(String officerId, String method, String path) {

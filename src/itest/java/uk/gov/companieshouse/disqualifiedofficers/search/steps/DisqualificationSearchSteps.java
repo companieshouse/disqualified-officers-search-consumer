@@ -67,7 +67,8 @@ public class DisqualificationSearchSteps {
         this.type = officerType;
         stubSearchApi(200);
         ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/" + officerType + "-disqualification.json");
-
+        data.setEvent(new EventRecord("Test", "Test", Arrays.asList("Test", "Test")));
+        data.setResourceId(officerId);
         kafkaTemplate.send(mainTopic, data);
 
         countDown();
@@ -98,6 +99,8 @@ public class DisqualificationSearchSteps {
         stubSearchApi(responseCode);
 
         ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/natural-disqualification.json");
+        data.setEvent(new EventRecord("Test", "Test", Arrays.asList("Test", "Test")));
+        data.setResourceId(officerId);
 
         kafkaTemplate.send(mainTopic, data);
 

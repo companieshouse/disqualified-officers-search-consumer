@@ -1,13 +1,10 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.processor;
 
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
-import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.disqualifiedofficers.search.service.api.ApiClientService;
 import uk.gov.companieshouse.disqualifiedofficers.search.transformer.ElasticSearchTransformer;
 import uk.gov.companieshouse.logging.Logger;
@@ -37,23 +34,25 @@ public class ResourceChangedProcessor {
     public void processResourceChanged(Message<ResourceChangedData> message) {
         ResourceChangedData payload = message.getPayload();
         final String logContext = payload.getContextId();
+        String officerId = payload.getResourceId();
+        
+        if (payload.getEvent().getType().equals("deleted")) {
+            apiService.deleteDisqualificationSearch(logContext, officerId);
 
-        OfficerDisqualification elasticSearchData = transformer
-                .getOfficerDisqualificationFromResourceChanged(payload);
-
-
-        String officerId = Stream.of( elasticSearchData.getLinks().getSelf().split("/") )
-            .reduce( (first,last) -> last ).get();
-
-
-        final ApiResponse<Void> response =
-                apiService.putDisqualificationSearch(logContext, officerId, elasticSearchData);
-
-        logger.infoContext(
+            logger.infoContext(
                 logContext,
-                String.format("Process disqualification for officer with id [%s]", officerId),
+                String.format("Delete disqualification for officer with id [%s]", officerId),
                 null);
+        } else {
+            OfficerDisqualification elasticSearchData = transformer
+            .getOfficerDisqualificationFromResourceChanged(payload);
 
+            apiService.putDisqualificationSearch(logContext, officerId, elasticSearchData);
+
+            logger.infoContext(
+                    logContext,
+                    String.format("Process disqualification for officer with id [%s]", officerId),
+                    null);
+        }
     }
-
 }

@@ -9,8 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
+import uk.gov.companieshouse.api.handler.search.disqualification.request.PrivateOfficerDisqualificationSearchDelete;
 import uk.gov.companieshouse.api.handler.search.disqualification.request.PrivateOfficerDisqualificationSearchUpsert;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.logging.Logger;
@@ -55,6 +54,23 @@ class ApiClientServiceImplTest {
                 any(PrivateOfficerDisqualificationSearchUpsert.class));
 
         assertThat(response).isEqualTo(expectedResponse);
+    }
 
+    @Test
+    void deleteDisqualificationSearch() {
+        final ApiResponse<Void> expectedResponse = new ApiResponse<>(HttpStatus.OK.value(), null, null);
+        ApiClientServiceImpl apiClientServiceSpy = Mockito.spy(apiClientService);
+        doReturn(expectedResponse).when(apiClientServiceSpy).executeOp(anyString(), anyString(),
+                anyString(),
+                any(PrivateOfficerDisqualificationSearchDelete.class));
+
+        ApiResponse<Void> response = apiClientServiceSpy.deleteDisqualificationSearch("context_id",
+                "ZTgzYWQwODAzMGY1ZDNkNGZiOTAxOWQ1YzJkYzc5MWViMTE3ZjQxZA==");
+        verify(apiClientServiceSpy).executeOp(anyString(), eq("deleteDisqualificationSearch"),
+                eq("/disqualified-search/delete/" +
+                        "ZTgzYWQwODAzMGY1ZDNkNGZiOTAxOWQ1YzJkYzc5MWViMTE3ZjQxZA=="),
+                any(PrivateOfficerDisqualificationSearchDelete.class));
+
+        assertThat(response).isEqualTo(expectedResponse);
     }
 }
