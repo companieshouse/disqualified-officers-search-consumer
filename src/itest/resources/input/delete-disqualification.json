@@ -1,0 +1,40 @@
+{
+  "date_of_birth":[1960,1,6],
+  "disqualifications": [
+    {
+      "address": {
+        "address_line_1":"Cardiff Street",
+        "locality":"Treorchy",
+        "postal_code":"CF42 6BG",
+        "premises":"30",
+        "region":"Mid Glamorgan"
+      },
+      "case_identifier":"BMC/123",
+      "company_names":["ACSR LIMITED"],
+      "court_name":"Belfast Magistrates Court",
+      "disqualification_type":"court-order",
+      "disqualified_from":[2022,1,6],
+      "disqualified_until":[2032,1,6],
+      "heard_on":[2022,1,5],
+      "last_variation":null,
+      "reason": {
+        "act":"company-directors-disqualification-northern-ireland-order-2002",
+        "article":"13A",
+        "description_identifier":"competition-and-markets-authority-disqualification-order"
+      },
+      "undertaken_on":null
+    }
+  ],
+  "etag":"020413bb8c7e5a1d2e3a754e4932b84f9ef0944c",
+  "forename":"Jane",
+  "honours":null,
+  "links": {
+    "self":"/disqualified-officers/natural/hv92jMgpl7e-ttvc5yZXqWiuHbQ"
+  },
+  "nationality":"British",
+  "other_forenames":"Fonda",
+  "permissions_to_act":null,
+  "person_number":null,
+  "surname":"ABBOTT",
+  "title":null
+}

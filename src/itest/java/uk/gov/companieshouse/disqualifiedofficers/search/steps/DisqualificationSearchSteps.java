@@ -53,6 +53,7 @@ public class DisqualificationSearchSteps {
     private TestData testData = new TestData();
 
     public static final String DISQUALIFICATION_RESOURCE_URI = "/disqualified-search/disqualified-officers/%s";
+    public static final String DISQUALIFICATION_DELETE_URI ="/disqualified-search/delete/%s";
 
 
     @Given("the application is running")
@@ -65,8 +66,9 @@ public class DisqualificationSearchSteps {
         configureWiremock();
         this.officerId = "hv92jMgpl7e-ttvc5yZXqWiuHbQ";
         this.type = officerType;
-        stubSearchApi(200);
-        ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/" + officerType + "-disqualification.json");
+        stubSearchApi(200, "PUT");
+        ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/" + officerType + "-disqualification.json",
+        "changed");
         data.setEvent(new EventRecord("Test", "Test", Arrays.asList("Test", "Test")));
         data.setResourceId(officerId);
         kafkaTemplate.send(mainTopic, data);
@@ -96,9 +98,10 @@ public class DisqualificationSearchSteps {
     public void theConsumerReceivesMessageButDataApiReturns(int responseCode) throws Exception{
         configureWiremock();
         this.officerId = "hv92jMgpl7e-ttvc5yZXqWiuHbQ";
-        stubSearchApi(responseCode);
+        stubSearchApi(responseCode, "PUT");
 
-        ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/natural-disqualification.json");
+        ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/natural-disqualification.json",
+                "changed");
         data.setEvent(new EventRecord("Test", "Test", Arrays.asList("Test", "Test")));
         data.setResourceId(officerId);
 
@@ -109,7 +112,18 @@ public class DisqualificationSearchSteps {
 
     @When("the consumer receives a message that causes an error")
     public void theConsumerReceivesMessageThatCausesAnError() throws Exception {
-        ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/natural-error.json");
+        ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/natural-error.json", "changed");
+        kafkaTemplate.send(mainTopic, data);
+
+        countDown();
+    }
+
+    @When("the consumer receives a delete payload")
+    public void theConsumerReceivesDeletePayload() throws Exception {
+        configureWiremock();
+        this.officerId = "1234567890";
+        stubSearchApi(200, "DELETE");
+        ResourceChangedData data = testData.getResourceChangedData("src/itest/resources/input/delete-disqualification.json", "deleted");
         kafkaTemplate.send(mainTopic, data);
 
         countDown();
@@ -129,8 +143,7 @@ public class DisqualificationSearchSteps {
         }
         verify(1, putRequestedFor(urlMatching("/disqualified-search/disqualified-officers/" + officerId)));
 
-        List<ServeEvent> allServeEvents = getAllServeEvents();
-        ServeEvent serveEvent = allServeEvents.get(0);
+        ServeEvent serveEvent = serverEvents.get(0);
         String actualBody = serveEvent.getRequest().getBodyAsString();
 
         JsonNode expectedTree = convertToJson(expectedBody);
@@ -138,6 +151,17 @@ public class DisqualificationSearchSteps {
 
         assertThat(serveEvent.getResponse().getStatus()).isEqualTo(200);
         assertThat(actualTree).isEqualTo(expectedTree);
+    }
+
+    @Then("a DELETE request is sent to the search Api")
+    public void deleteRequestIsSentToTheSearchApi() {
+        List<ServeEvent> serverEvents = getServeEvents();
+        assertThat(serverEvents.isEmpty()).isFalse();
+        assertThat(serverEvents.size()).isEqualTo(1);
+        assertThat(serverEvents.get(0).getRequest().getUrl()).isEqualTo(String.format(DISQUALIFICATION_DELETE_URI, this.officerId));
+
+        verify(1, deleteRequestedFor(urlMatching("/disqualified-search/delete/" + officerId)));
+        assertThat(serverEvents.get(0).getResponse().getStatus()).isEqualTo(200);
     }
 
     @Then("^the message should be moved to topic (.*)$")
@@ -170,11 +194,18 @@ public class DisqualificationSearchSteps {
         }
     }
 
-    private void stubSearchApi(int responseCode) {
-        stubFor(put(urlEqualTo("/disqualified-search/disqualified-officers/" + officerId))
-                .willReturn(aResponse()
-                    .withStatus(responseCode)
-                    .withHeader("Content-Type", "application/json")));
+    private void stubSearchApi(int responseCode, String method) {
+        if (method.equals("DELETE")) {
+            stubFor(delete(urlEqualTo("/disqualified-search/delete/" + officerId))
+                    .willReturn(aResponse()
+                            .withStatus(responseCode)
+                            .withHeader("Content-Type", "application/json")));
+        } else {
+            stubFor(put(urlEqualTo("/disqualified-search/disqualified-officers/" + officerId))
+                    .willReturn(aResponse()
+                            .withStatus(responseCode)
+                            .withHeader("Content-Type", "application/json")));
+        }
     }
 
     private List<ServeEvent> getServeEvents() {
