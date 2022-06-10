@@ -29,7 +29,7 @@
         <io-cucumber.version>7.2.3</io-cucumber.version>
         <wiremock.standalone.version>2.32.0</wiremock.standalone.version>
         <structured-logging.version>1.9.12</structured-logging.version>
-        <private-api-sdk-java.version>2.0.168</private-api-sdk-java.version>
+        <private-api-sdk-java.version>2.0.178</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>1.0.4</api-sdk-manager-java-library.version>
         <test-containers.version>1.16.3</test-containers.version>
         <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>

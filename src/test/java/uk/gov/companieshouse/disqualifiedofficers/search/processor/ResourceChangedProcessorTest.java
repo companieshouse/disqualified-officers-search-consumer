@@ -12,7 +12,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import uk.gov.companieshouse.api.disqualification.DisqualificationLinks;
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
 import uk.gov.companieshouse.disqualifiedofficers.search.service.api.ApiClientService;
 import uk.gov.companieshouse.disqualifiedofficers.search.transformer.ElasticSearchTransformer;
@@ -49,30 +48,37 @@ public class ResourceChangedProcessorTest {
     }
 
     @Test
-    @DisplayName("Transforms a kafka message containing a payload into a search api object")
+    @DisplayName("Transforms a kafka message containing a change payload into a search api object")
     void When_ValidMessage_Expect_ValidDisqualificationES6Mapping() throws IOException {
-        Message<ResourceChangedData> mockChsResourceChangedData = createChsMessage();
+        Message<ResourceChangedData> mockChsResourceChangedData = createChsMessage("changed");
         OfficerDisqualification officerDisqualification = new OfficerDisqualification();
-        DisqualificationLinks links = new DisqualificationLinks();
-        links.setSelf("disqualified-officers/natural/123456789");
-        officerDisqualification.setLinks(links);
         when(transformer.getOfficerDisqualificationFromResourceChanged(
                 mockChsResourceChangedData.getPayload())).thenReturn(officerDisqualification);
 
         resourceChangedProcessor.processResourceChanged(mockChsResourceChangedData);
 
         verify(transformer).getOfficerDisqualificationFromResourceChanged(mockChsResourceChangedData.getPayload());
-        verify(apiClientService).putDisqualificationSearch("context_id", "123456789", officerDisqualification);
+        verify(apiClientService).putDisqualificationSearch("context_id", "1234567890", officerDisqualification);
     }
 
-    private Message<ResourceChangedData> createChsMessage() throws IOException {
+    @Test
+    @DisplayName("Transforms a kafka message containing a delete payload into a search api request")
+    void When_ValidMessage_Expect_ValidDisqualificationDelete() throws IOException {
+        Message<ResourceChangedData> mockChsResourceChangedData = createChsMessage("deleted");
+
+        resourceChangedProcessor.processResourceChanged(mockChsResourceChangedData);
+
+        verify(apiClientService).deleteDisqualificationSearch("context_id", "1234567890");
+    }
+
+    private Message<ResourceChangedData> createChsMessage(String type) throws IOException {
         InputStreamReader exampleJsonPayload = new InputStreamReader(
                 ClassLoader.getSystemClassLoader().getResourceAsStream("disqualified-officers-example.json"));
         String data = FileCopyUtils.copyToString(exampleJsonPayload);
 
         EventRecord eventRecord = new EventRecord();
         eventRecord.setPublishedAt("2022010351");
-        eventRecord.setType("changed");
+        eventRecord.setType(type);
         
         String officerId = "1234567890";
 
