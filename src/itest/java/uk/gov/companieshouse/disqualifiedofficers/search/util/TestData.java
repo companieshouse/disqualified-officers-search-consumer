@@ -11,15 +11,14 @@ import java.util.Arrays;
 
 public class TestData {
 
-    public static final String CHANGED = "changed";
     public static final String CONTEXT_ID = "context_id";
     public static final String RESOURCE_ID = "1234567890";
     public static final String RESOURCE_KIND = "disqualified-officers";
     public static final String DISQUALIFICATION_RESOURCE_URI = "disqualified-officers/natural/1234567890";
 
-    public ResourceChangedData getResourceChangedData(String fileName) throws IOException {
+    public ResourceChangedData getResourceChangedData(String fileName, String type) throws IOException {
         EventRecord event = EventRecord.newBuilder()
-                .setType(CHANGED)
+                .setType(type)
                 .setPublishedAt("2022-02-22T10:51:30")
                 .setFieldsChanged(Arrays.asList("address", "court_name"))
                 .build();
