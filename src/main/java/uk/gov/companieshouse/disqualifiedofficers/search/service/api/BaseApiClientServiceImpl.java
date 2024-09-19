@@ -58,7 +58,7 @@ public abstract class BaseApiClientServiceImpl {
                 throw new NonRetryableErrorException(msg, ex);
             }
 
-            String msg = "Non-Successful response received from search api, retry";
+            String msg = String.format("%s response received from search api, retry", statusCode);
             logger.infoContext(logContext, msg, logMap);
             throw new RetryableErrorException(msg, ex);
         }

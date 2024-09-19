@@ -65,7 +65,7 @@ class BaseApiClientServiceImplTest {
         RetryableErrorException thrown = assertThrows(RetryableErrorException.class,
                 () -> service.executeOp(null, null, null, executor));
 
-        assertThat(thrown.getMessage()).isEqualTo("Non-Successful response received from search api, retry");
+        assertThat(thrown.getMessage()).isEqualTo("500 response received from search api, retry");
     }
 
     @Test
