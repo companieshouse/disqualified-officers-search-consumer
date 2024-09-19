@@ -47,6 +47,9 @@ public class StreamData {
     @JsonProperty("title")
     private String title;
 
+    @JsonProperty("person_number")
+    private String personNumber;
+
     // Corporate properties
     @JsonProperty("company_number")
     private String companyNumber;
@@ -163,6 +166,14 @@ public class StreamData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getPersonNumber() {
+        return personNumber;
+    }
+
+    public void setPersonNumber(String personNumber) {
+        this.personNumber = personNumber;
     }
 
     public void setCompanyNumber(String companyNumber) {
