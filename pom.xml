@@ -16,6 +16,7 @@
     <properties>
         <java.version>11</java.version>
         <spring.boot.version>2.6.4</spring.boot.version>
+        <spring-boot-maven-plugin.version>2.5.5</spring-boot-maven-plugin.version>
 
         <main.class>uk.gov.companieshouse.disqualifiedofficers.search.DisqualifiedOfficersSearchConsumerApplication</main.class>
 
@@ -238,6 +239,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>${main.class}</mainClass>
                 </configuration>
