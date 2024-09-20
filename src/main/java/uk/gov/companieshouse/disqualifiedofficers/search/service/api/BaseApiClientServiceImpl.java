@@ -3,7 +3,6 @@ package uk.gov.companieshouse.disqualifiedofficers.search.service.api;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.Executor;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -13,6 +12,7 @@ import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErro
 import uk.gov.companieshouse.logging.Logger;
 
 public abstract class BaseApiClientServiceImpl {
+
     protected Logger logger;
 
     protected BaseApiClientServiceImpl(final Logger logger) {
@@ -30,9 +30,9 @@ public abstract class BaseApiClientServiceImpl {
      * @return the response object
      */
     public <T> ApiResponse<T> executeOp(final String logContext,
-                                        final String operationName,
-                                        final String uri,
-                                        final Executor<ApiResponse<T>> executor) {
+            final String operationName,
+            final String uri,
+            final Executor<ApiResponse<T>> executor) {
 
         final Map<String, Object> logMap = new HashMap<>();
         logMap.put("operation_name", operationName);
@@ -48,16 +48,18 @@ public abstract class BaseApiClientServiceImpl {
 
             throw new RetryableErrorException(msg, ex);
         } catch (ApiErrorResponseException ex) {
-            logMap.put("status", ex.getStatusCode());
+            int statusCode = ex.getStatusCode();
+            logMap.put("status", statusCode);
 
-            if (ex.getStatusCode() == HttpStatus.BAD_REQUEST.value()) {
-                String msg = "400 BAD_REQUEST response received from search api";
+            if (statusCode == HttpStatus.BAD_REQUEST.value()
+                    || statusCode == HttpStatus.CONFLICT.value()) {
+                String msg = String.format("%s response received from search api", statusCode);
                 logger.errorContext(logContext, msg, ex, logMap);
                 throw new NonRetryableErrorException(msg, ex);
             }
 
-            String msg = "Non-Successful response received from search api, retry";
-            logger.errorContext(logContext, msg , ex, logMap);
+            String msg = String.format("%s response received from search api, retry", statusCode);
+            logger.infoContext(logContext, msg, logMap);
             throw new RetryableErrorException(msg, ex);
         }
     }

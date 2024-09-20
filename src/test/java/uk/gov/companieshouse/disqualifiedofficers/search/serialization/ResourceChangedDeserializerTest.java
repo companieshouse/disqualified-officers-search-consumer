@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.serialization;
 
-import org.apache.kafka.common.errors.SerializationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

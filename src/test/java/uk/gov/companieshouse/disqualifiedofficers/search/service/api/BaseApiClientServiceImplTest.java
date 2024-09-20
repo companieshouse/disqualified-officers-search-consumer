@@ -22,26 +22,27 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class BaseApiClientServiceImplTest {
+class BaseApiClientServiceImplTest {
 
     private BaseApiClientServiceImpl service;
 
     @Mock
     private Logger logger;
     @Mock
-    private Executor executor;
+    private Executor<ApiResponse<Integer>> executor;
 
     @BeforeEach
     void setup() {
-        service = new BaseApiClientServiceImpl(logger) {};
+        service = new BaseApiClientServiceImpl(logger) {
+        };
     }
 
     @Test
     void returnsApiResponse() throws Exception {
-        ApiResponse expectedResponse = new ApiResponse(200, new HashMap<>());
+        ApiResponse<Integer> expectedResponse = new ApiResponse<>(200, new HashMap<>());
         when(executor.execute()).thenReturn(expectedResponse);
 
-        ApiResponse actualResponse = service.executeOp(null, null, null, executor);
+        ApiResponse<Integer> actualResponse = service.executeOp(null, null, null, executor);
 
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -64,7 +65,7 @@ public class BaseApiClientServiceImplTest {
         RetryableErrorException thrown = assertThrows(RetryableErrorException.class,
                 () -> service.executeOp(null, null, null, executor));
 
-        assertThat(thrown.getMessage()).isEqualTo("Non-Successful response received from search api, retry");
+        assertThat(thrown.getMessage()).isEqualTo("500 response received from search api, retry");
     }
 
     @Test
@@ -75,6 +76,17 @@ public class BaseApiClientServiceImplTest {
         NonRetryableErrorException thrown = assertThrows(NonRetryableErrorException.class,
                 () -> service.executeOp(null, null, null, executor));
 
-        assertThat(thrown.getMessage()).isEqualTo("400 BAD_REQUEST response received from search api");
+        assertThat(thrown.getMessage()).isEqualTo("400 response received from search api");
+    }
+
+    @Test
+    void throwsNonRetryableErrorOn409() throws Exception {
+        when(executor.execute()).thenThrow(
+                new ApiErrorResponseException(new Builder(409, "409", new HttpHeaders())));
+
+        NonRetryableErrorException thrown = assertThrows(NonRetryableErrorException.class,
+                () -> service.executeOp(null, null, null, executor));
+
+        assertThat(thrown.getMessage()).isEqualTo("409 response received from search api");
     }
 }

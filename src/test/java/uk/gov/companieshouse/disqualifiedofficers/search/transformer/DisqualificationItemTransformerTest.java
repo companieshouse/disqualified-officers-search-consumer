@@ -35,6 +35,7 @@ public class DisqualificationItemTransformerTest {
     private static final String FORENAME = "forename";
     private static final String OTHER_FORENAMES = "other";
     private static final String SURNAME = "surname";
+    private static final String PERSON_NUMBER = "12345678";
 
     @Mock
     AddressUtils addressUtils;
@@ -93,6 +94,7 @@ public class DisqualificationItemTransformerTest {
             data.setForename(FORENAME);
             data.setOtherForenames(OTHER_FORENAMES);
             data.setSurname(SURNAME);
+            data.setPersonNumber(PERSON_NUMBER);
         } else {
             data.setName(COMPANY_NAME);
         }
