@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.disqualification.Address;
 import uk.gov.companieshouse.api.disqualification.Disqualification;
 import uk.gov.companieshouse.api.disqualification.Item;
 import uk.gov.companieshouse.disqualifiedofficers.search.model.CompanyName;
@@ -16,6 +17,7 @@ import uk.gov.companieshouse.disqualifiedofficers.search.utils.CompanyNameUtils;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +31,7 @@ public class DisqualificationItemTransformerTest {
     private static final String FROM_STRING = "2022-01-01";
     private static final LocalDate UNTIL = LocalDate.of(2025, 1, 1);
     private static final String UNTIL_STRING = "2025-01-01";
-    private static final Object ADDRESS = new Object();
+    private static final Object ADDRESS = new Address();
     private static final String FORENAME = "forename";
     private static final String OTHER_FORENAMES = "other";
     private static final String SURNAME = "surname";
@@ -43,7 +45,7 @@ public class DisqualificationItemTransformerTest {
 
     @BeforeEach
     public void setup() {
-        when(addressUtils.getAddressAsString(ADDRESS)).thenReturn(ADDRESS_STRING);
+        lenient().when(addressUtils.getAddressAsString(ADDRESS)).thenReturn(ADDRESS_STRING);
     }
 
     @Test
@@ -78,7 +80,7 @@ public class DisqualificationItemTransformerTest {
 
     private Disqualification getDisqualification() {
         Disqualification disq = new Disqualification();
-        disq.setAddress(ADDRESS);
+        disq.setAddress(new Address());
         disq.setDisqualifiedFrom(FROM);
         disq.setDisqualifiedUntil(UNTIL);
         return disq;
