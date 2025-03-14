@@ -8,10 +8,6 @@ management:
 server:
   port: 8081
 
-springfox:
-  documentation:
-    auto-startup: false
-
 spring:
   kafka:
     bootstrap-servers: ${STREAMING_KAFKA_BROKER_URL:localhost:9092}

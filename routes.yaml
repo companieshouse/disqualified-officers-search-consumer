@@ -1,5 +1,0 @@
-app_name: disqualified-officers-search-consumer
-group: api
-weight: 900
-routes:
-   1: ^/disqualified-officers-search-consumer/healthcheck
