@@ -1,12 +1,16 @@
 management:
   endpoints:
-    web:
-      base-path: /disqualified-officers-search-consumer
-      path-mapping:
-        health: /healthcheck
-
-server:
-  port: 8081
+      enabled-by-default: false
+      web:
+        base-path: /
+        path-mapping:
+          health: disqualified-officers-search-consumer/healthcheck
+        exposure:
+          include: health
+  endpoint:
+      health:
+        enabled: true
+        show-details: never
 
 spring:
   kafka:
