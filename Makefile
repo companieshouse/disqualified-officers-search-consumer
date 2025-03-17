@@ -7,7 +7,7 @@ dependency_check_base_suppressions:=common_suppressions_spring_6.xml
 # as the source of the suppressions file.
 # This should point to "main" branch when being used for release,
 # but can point to a different branch for experimentation/development.
-dependency_check_suppressions_repo_branch:=feature/suppressions-for-company-accounts-api
+dependency_check_suppressions_repo_branch:=main
 
 dependency_check_minimum_cvss := 4
 dependency_check_assembly_analyzer_enabled := false
@@ -53,7 +53,6 @@ endif
 	mvn package -DskipTests=true
 	$(eval tmpdir:=$(shell mktemp -d build-XXXXXXXXXX))
 	cp ./start.sh $(tmpdir)
-	cp ./routes.yaml $(tmpdir)
 	cp ./target/$(artifact_name)-$(version).jar $(tmpdir)/$(artifact_name).jar
 	cd $(tmpdir); zip -r ../$(artifact_name)-$(version).zip *
 	rm -rf $(tmpdir)
