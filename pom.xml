@@ -12,7 +12,6 @@
     <version>unversioned</version>
     <name>disqualified-officers-search-consumer</name>
     <description>Disqualified officers search consumer</description>
-    <!-- Temp change to test sbom changes-->
 
     <properties>
         <java.version>21</java.version>
