@@ -38,6 +38,7 @@
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
         <apache-avro.version>1.12.0</apache-avro.version>
         <commons-io.version>2.18.0</commons-io.version>
+        <commons-beanutils.version>1.11.0</commons-beanutils.version>
 
         <assertj-core.version>3.27.3</assertj-core.version>
 
@@ -82,6 +83,11 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${spring-context.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
