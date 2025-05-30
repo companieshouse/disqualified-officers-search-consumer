@@ -55,8 +55,8 @@
         <sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
         <sonar.login></sonar.login>
         <sonar.password></sonar.password>
-        <sonar.projectName>registered-email-address-api</sonar.projectName>
-        <sonar.projectKey>uk.gov.companieshouse:registered-email-address-api</sonar.projectKey>
+        <sonar.projectName>disqualified-officers-search-consumer</sonar.projectName>
+        <sonar.projectKey>uk.gov.companieshouse:disqualified-officers-search-consumer</sonar.projectKey>
 
         <argLine>-Dfile.encoding=UTF-8</argLine>
     </properties>
