@@ -16,7 +16,7 @@ public class TestData {
     public static final String RESOURCE_KIND = "disqualified-officers";
     public static final String DISQUALIFICATION_RESOURCE_URI = "disqualified-officers/natural/1234567890";
 
-    public ResourceChangedData getResourceChangedData(String fileName, String type) throws IOException {
+    public ResourceChangedData getResourceChangedData(String fileName, String type) {
         EventRecord event = EventRecord.newBuilder()
                 .setType(type)
                 .setPublishedAt("2022-02-22T10:51:30")

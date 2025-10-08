@@ -4,54 +4,87 @@ import static java.lang.String.format;
 import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_CAUSE_FQCN;
 import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_STACKTRACE;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.header.Header;
-import uk.gov.companieshouse.disqualifiedofficers.search.config.LoggingConfig;
+import org.yaml.snakeyaml.Yaml;
+
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 /**
  * Retryable Topic Error Interceptor.
  */
 public class RetryableTopicErrorInterceptor implements ProducerInterceptor<String, Object> {
 
-    @Override
-    public ProducerRecord<String, Object> onSend(ProducerRecord<String, Object> record) {
-        String nextTopic = record.topic().contains("-error") ? getNextErrorTopic(record)
-                : record.topic();
-        if (LoggingConfig.getLogger() != null) {
-            LoggingConfig.getLogger().info(format("Moving record into new topic: %s with value: %s",
-                    nextTopic, record.value()));
+    private Logger logger;
+    
+    private Logger getLogger() {
+        String loggerNamespace = RetryableTopicErrorInterceptor.class.getCanonicalName();
+        
+        if (logger == null) {
+            try (InputStream is = RetryableTopicErrorInterceptor.class.getClassLoader().getResourceAsStream("application.yml")) {
+                if (is != null) {
+                    Yaml yaml = new Yaml();
+                    
+                    Map<String, Object> obj = yaml.load(is);
+                    
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> nestedObj = (Map<String, Object>) obj.get("logger");
+                    
+                    loggerNamespace = (String) nestedObj.get("namespace");
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            
+            logger = LoggerFactory.getLogger(loggerNamespace);
         }
+        
+        return logger;
+    }
+    
+    @Override
+    public ProducerRecord<String, Object> onSend(ProducerRecord<String, Object> aRecord) {
+        String nextTopic = aRecord.topic().contains("-error") ? getNextErrorTopic(aRecord)
+                : aRecord.topic();
+        getLogger().info(format("Moving record into new topic: %s with value: %s",
+                    nextTopic, aRecord.value()));
         if (nextTopic.contains("-invalid")) {
-            return new ProducerRecord<>(nextTopic, record.key(), record.value());
+            return new ProducerRecord<>(nextTopic, aRecord.key(), aRecord.value());
         }
 
-        return record;
+        return aRecord;
     }
 
     @Override
     public void onAcknowledgement(RecordMetadata recordMetadata, Exception ex) {
+        // nothing to do
     }
 
     @Override
     public void close() {
+        // nothing to do
     }
 
     @Override
     public void configure(Map<String, ?> map) {
+        // nothing to do
     }
 
-    private String getNextErrorTopic(ProducerRecord<String, Object> record) {
-        Header header1 = record.headers().lastHeader(EXCEPTION_CAUSE_FQCN);
-        Header header2 = record.headers().lastHeader(EXCEPTION_STACKTRACE);
+    private String getNextErrorTopic(ProducerRecord<String, Object> aRecord) {
+        Header header1 = aRecord.headers().lastHeader(EXCEPTION_CAUSE_FQCN);
+        Header header2 = aRecord.headers().lastHeader(EXCEPTION_STACKTRACE);
         return ((header1 != null
                 && new String(header1.value()).contains(NonRetryableErrorException.class.getName()))
                 || (header2 != null
                 && new String(header2.value()).contains(
                 NonRetryableErrorException.class.getName())))
-                ? record.topic().replace("-error", "-invalid") : record.topic();
+                ? aRecord.topic().replace("-error", "-invalid") : aRecord.topic();
     }
 }

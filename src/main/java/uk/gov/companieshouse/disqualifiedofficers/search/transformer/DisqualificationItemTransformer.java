@@ -15,12 +15,18 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class DisqualificationItemTransformer {
 
-    private static final String recordType = "disqualifications";
+    private static final String RECORD_TYPE = "disqualifications";
+
+    private final AddressUtils addressUtils;
+
+    private final CompanyNameUtils companyNameUtils;
 
     @Autowired
-    private AddressUtils addressUtils;
-    @Autowired
-    private CompanyNameUtils companyNameUtils;
+    public DisqualificationItemTransformer(AddressUtils addressUtils, CompanyNameUtils companyNameUtils) {
+        super();
+        this.addressUtils = addressUtils;
+        this.companyNameUtils = companyNameUtils;
+    }
 
     public Item getItemFromDisqualification(Disqualification disqualification, StreamData data) {
         Item item = new Item();
@@ -28,7 +34,7 @@ public class DisqualificationItemTransformer {
         item.setAddress(address);
         item.setFullAddress(addressUtils.getAddressAsString(address));
 
-        if (data.getName() != null && data.getName().length() > 0) {
+        if (data.getName() != null && !data.getName().isEmpty()) {
             setCorporateFields(item, data);
         } else {
             setPersonFields(item, data);
@@ -40,7 +46,7 @@ public class DisqualificationItemTransformer {
         item.setDisqualifiedFrom(disqualification.getDisqualifiedFrom().format(dateTimeFormatter));
         item.setDisqualifiedUntil(disqualification.getDisqualifiedUntil().format(dateTimeFormatter));
 
-        item.setRecordType(recordType);
+        item.setRecordType(RECORD_TYPE);
 
         return item;
     }
