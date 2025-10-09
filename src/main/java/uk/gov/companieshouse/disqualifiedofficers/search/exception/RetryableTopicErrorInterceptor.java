@@ -42,27 +42,23 @@ public class RetryableTopicErrorInterceptor implements ProducerInterceptor<Strin
                 
             }
         } catch (IOException ex) {
-            throw new RuntimeException("failed to access application.yml while attempting to get logger namespace", ex);
+            // ignored, go with default logger namespace of the classname
         }
         
         return loggerNamespace;
     }
     
-    private Logger logger;
+    private static Logger logger;
     
-    private Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(getLoggerNamespace());
-        }
-        
-        return logger;
+    static {
+        logger = LoggerFactory.getLogger(getLoggerNamespace());
     }
-
+    
     @Override
     public ProducerRecord<String, Object> onSend(ProducerRecord<String, Object> aRecord) {
         String nextTopic = aRecord.topic().contains("-error") ? getNextErrorTopic(aRecord)
                 : aRecord.topic();
-        getLogger().info(format("Moving record into new topic: %s with value: %s",
+        logger.info(format("Moving record into new topic: %s with value: %s",
                     nextTopic, aRecord.value()));
         if (nextTopic.contains("-invalid")) {
             return new ProducerRecord<>(nextTopic, aRecord.key(), aRecord.value());
