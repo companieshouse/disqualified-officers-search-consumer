@@ -4,15 +4,12 @@ import static java.lang.String.format;
 import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_CAUSE_FQCN;
 import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_STACKTRACE;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.header.Header;
-import org.yaml.snakeyaml.Yaml;
 
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -22,37 +19,8 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  */
 public class RetryableTopicErrorInterceptor implements ProducerInterceptor<String, Object> {
 
-    private static String getLoggerNamespace() {
-        String loggerNamespace = RetryableTopicErrorInterceptor.class.getCanonicalName();
-        
-        try (InputStream is = RetryableTopicErrorInterceptor.class.getClassLoader().getResourceAsStream("application.yml")) {
-            if (is != null) {
-                Yaml yaml = new Yaml();
-                
-                Map<String, Object> obj = yaml.load(is);
-                
-                if (obj != null) {
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> nestedObj = (Map<String, Object>) obj.get("logger");
-
-                    if (nestedObj != null) {
-                        loggerNamespace = (String) nestedObj.get("namespace");
-                    }
-                }
-                
-            }
-        } catch (IOException ex) {
-            // ignored, go with default logger namespace of the classname
-        }
-        
-        return loggerNamespace;
-    }
-    
-    private static Logger logger;
-    
-    static {
-        logger = LoggerFactory.getLogger(getLoggerNamespace());
-    }
+    // cannot pass from LoggingConfig because SonarQube objects to static assignment in instance method, cannot read from YML here because inefficient / overly complex
+    private final Logger logger = LoggerFactory.getLogger("disqualified-officers-search-consumer");
     
     @Override
     public ProducerRecord<String, Object> onSend(ProducerRecord<String, Object> aRecord) {
