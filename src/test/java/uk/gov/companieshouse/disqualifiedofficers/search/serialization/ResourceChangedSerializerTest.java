@@ -46,8 +46,7 @@ class ResourceChangedSerializerTest {
 
     @Test
     void When_serialize_null_returns_null() {
-        byte[] emptyArray = new byte[0];
         byte[] serialize = serializer.serialize("", null);
-        assertThat(serialize).isEqualTo(emptyArray);
+        assertThat(serialize).isEmpty();
     }
 }

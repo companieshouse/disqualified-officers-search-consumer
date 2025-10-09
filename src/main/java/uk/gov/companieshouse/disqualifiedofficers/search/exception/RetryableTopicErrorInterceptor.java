@@ -22,33 +22,42 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  */
 public class RetryableTopicErrorInterceptor implements ProducerInterceptor<String, Object> {
 
+    private static String getLoggerNamespace() {
+        String loggerNamespace = RetryableTopicErrorInterceptor.class.getCanonicalName();
+        
+        try (InputStream is = RetryableTopicErrorInterceptor.class.getClassLoader().getResourceAsStream("application.yml")) {
+            if (is != null) {
+                Yaml yaml = new Yaml();
+                
+                Map<String, Object> obj = yaml.load(is);
+                
+                if (obj != null) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> nestedObj = (Map<String, Object>) obj.get("logger");
+
+                    if (nestedObj != null) {
+                        loggerNamespace = (String) nestedObj.get("namespace");
+                    }
+                }
+                
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException("failed to access application.yml while attempting to get logger namespace", ex);
+        }
+        
+        return loggerNamespace;
+    }
+    
     private Logger logger;
     
     private Logger getLogger() {
-        String loggerNamespace = RetryableTopicErrorInterceptor.class.getCanonicalName();
-        
         if (logger == null) {
-            try (InputStream is = RetryableTopicErrorInterceptor.class.getClassLoader().getResourceAsStream("application.yml")) {
-                if (is != null) {
-                    Yaml yaml = new Yaml();
-                    
-                    Map<String, Object> obj = yaml.load(is);
-                    
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> nestedObj = (Map<String, Object>) obj.get("logger");
-                    
-                    loggerNamespace = (String) nestedObj.get("namespace");
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            
-            logger = LoggerFactory.getLogger(loggerNamespace);
+            logger = LoggerFactory.getLogger(getLoggerNamespace());
         }
         
         return logger;
     }
-    
+
     @Override
     public ProducerRecord<String, Object> onSend(ProducerRecord<String, Object> aRecord) {
         String nextTopic = aRecord.topic().contains("-error") ? getNextErrorTopic(aRecord)
