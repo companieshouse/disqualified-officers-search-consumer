@@ -19,7 +19,7 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  */
 public class RetryableTopicErrorInterceptor implements ProducerInterceptor<String, Object> {
 
-    // cannot pass from LoggingConfig because SonarQube objects to static assignment in instance method, cannot read from YML here because inefficient / overly complex
+    // cannot pass from LoggingConfig because SonarQube prohibits static assignment in an instance method; cannot read from YML here because inefficient / overly complex
     private final Logger logger = LoggerFactory.getLogger("disqualified-officers-search-consumer");
     
     @Override
