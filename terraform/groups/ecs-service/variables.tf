@@ -50,6 +50,12 @@ variable "max_task_count" {
   default     = 1
 }
 
+variable "min_task_count" {
+  type        = number
+  description = "The minimum number of tasks for this service."
+  default     = 1
+}
+
 variable "use_fargate" {
   type        = bool
   description = "If true, sets the required capabilities for all containers in the task definition to use FARGATE, false uses EC2"
@@ -87,6 +93,12 @@ variable "service_scaleup_schedule" {
   default     = ""
 }
 
+variable "service_autoscale_scale_out_cooldown" {
+  type        = number
+  description = "Cooldown in seconds for ECS Service scale out (add more tasks)"
+  default     = 300
+}
+
 # ----------------------------------------------------------------------
 # Cloudwatch alerts
 # ----------------------------------------------------------------------
@@ -114,4 +126,10 @@ variable "use_set_environment_files" {
 variable "disqualified_officers_search_consumer_version" {
   type        = string
   description = "The version of the disqualified_officers_search_consumer container to run."
+}
+
+variable "create_comparison_service" {
+  type        = bool
+  default     = false
+  description = "Whether or not to deploy the comparison ECS module to run two consumers in parallel."
 }

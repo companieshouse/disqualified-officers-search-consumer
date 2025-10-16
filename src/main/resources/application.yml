@@ -23,7 +23,7 @@ api:
 
 disqualified-officers:
   search:
-    group-id: disqualified-officers-search-consumer
+    group-id: ${GROUP_ID:disqualified-officers-search-consumer}
     retry-attempts: 4
     backoff-delay: 100
     topic: stream-disqualifications
