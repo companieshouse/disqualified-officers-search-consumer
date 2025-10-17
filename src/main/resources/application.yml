@@ -27,6 +27,8 @@ disqualified-officers:
     retry-attempts: 4
     backoff-delay: 100
     topic: stream-disqualifications
+    retry-suffix: ${RETRY_SUFFIX:-retry}
+    error-suffix: ${ERROR_SUFFIX:-error}
 
 logger:
   namespace: disqualified-officers-search-consumer
