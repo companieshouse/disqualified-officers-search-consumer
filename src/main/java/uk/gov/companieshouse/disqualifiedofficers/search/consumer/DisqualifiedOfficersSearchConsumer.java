@@ -32,7 +32,8 @@ public class DisqualifiedOfficersSearchConsumer {
     @RetryableTopic(attempts = "${disqualified-officers.search.retry-attempts}",
             backoff = @Backoff(delayExpression = "${disqualified-officers.search.backoff-delay}"),
             sameIntervalTopicReuseStrategy = SameIntervalTopicReuseStrategy.SINGLE_TOPIC,
-            dltTopicSuffix = "-error",
+            dltTopicSuffix = "${disqualified-officers.search.error-suffix}",
+            retryTopicSuffix = "${disqualified-officers.search.retry-suffix}",
             dltStrategy = DltStrategy.FAIL_ON_ERROR,
             autoCreateTopics = "false",
             exclude = NonRetryableErrorException.class)
@@ -40,7 +41,7 @@ public class DisqualifiedOfficersSearchConsumer {
             groupId = "${disqualified-officers.search.group-id}",
             containerFactory = "listenerContainerFactory")
     public void receiveMainMessages(Message<ResourceChangedData> message,
-                                    @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         logger.info("A new message read from" + topic + " topic with payload: "
                 + message.getPayload());
         try {
