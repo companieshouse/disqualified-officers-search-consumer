@@ -5,5 +5,3 @@ aws_profile = "live-eu-west-2"
 use_set_environment_files = true
 
 service_autoscale_scale_out_cooldown = 600
-
-create_comparison_service = true
