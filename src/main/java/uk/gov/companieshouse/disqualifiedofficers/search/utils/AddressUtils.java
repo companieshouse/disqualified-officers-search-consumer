@@ -36,6 +36,6 @@ public class AddressUtils {
     }
 
     private static boolean checkString(String s) {
-        return s != null && s.length() > 0;
+        return s != null && !s.isEmpty();
     }
 }

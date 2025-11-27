@@ -9,35 +9,35 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_CAUSE_FQCN;
 
-public class RetryableTopicErrorInterceptorTest {
+class RetryableTopicErrorInterceptorTest {
 
     private RetryableTopicErrorInterceptor interceptor;
 
     @BeforeEach
-    public void setUp(){
+    void setUp(){
         interceptor = new RetryableTopicErrorInterceptor();
     }
 
     @Test
     void when_correct_topic_is_sent_record_is_unchanged() {
-        ProducerRecord<String, Object> record = createRecord("topic", "header");
-        ProducerRecord<String, Object> newRecord = interceptor.onSend(record);
+        ProducerRecord<String, Object> aRecord = createRecord("topic", "header");
+        ProducerRecord<String, Object> newRecord = interceptor.onSend(aRecord);
 
-        assertThat(newRecord).isEqualTo(record);
+        assertThat(newRecord).isEqualTo(aRecord);
     }
 
     @Test
     void when_error_is_nonretryable_topic_is_set_to_invalid() {
-        ProducerRecord<String, Object> record = createRecord("topic-error", NonRetryableErrorException.class.getName());
-        ProducerRecord<String, Object> newRecord = interceptor.onSend(record);
+        ProducerRecord<String, Object> aRecord = createRecord("topic-error", NonRetryableErrorException.class.getName());
+        ProducerRecord<String, Object> newRecord = interceptor.onSend(aRecord);
 
         assertThat(newRecord.topic()).isEqualTo("topic-invalid");
     }
 
     @Test
     void when_error_is_retryable_topic_is_unchanged() {
-        ProducerRecord<String, Object> record = createRecord("topic-error", RetryableErrorException.class.getName());
-        ProducerRecord<String, Object> newRecord = interceptor.onSend(record);
+        ProducerRecord<String, Object> aRecord = createRecord("topic-error", RetryableErrorException.class.getName());
+        ProducerRecord<String, Object> newRecord = interceptor.onSend(aRecord);
 
         assertThat(newRecord.topic()).isEqualTo("topic-error");
     }
@@ -46,8 +46,6 @@ public class RetryableTopicErrorInterceptorTest {
         Object recordObj = new Object();
         RecordHeaders headers = new RecordHeaders();
         headers.add(EXCEPTION_CAUSE_FQCN, header.getBytes());
-        ProducerRecord<String, Object> record = new ProducerRecord<>(topic, 1,1L ,null, recordObj, headers);
-
-        return record;
+        return new ProducerRecord<>(topic, 1,1L ,null, recordObj, headers);
     }
 }

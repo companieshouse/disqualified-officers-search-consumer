@@ -21,7 +21,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class DisqualificationItemTransformerTest {
+class DisqualificationItemTransformerTest {
 
     private static final String ADDRESS_STRING = "Test Address";
     private static final String COMPANY_START = "Test";
@@ -45,12 +45,12 @@ public class DisqualificationItemTransformerTest {
     DisqualificationItemTransformer transformer;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         lenient().when(addressUtils.getAddressAsString(ADDRESS)).thenReturn(ADDRESS_STRING);
     }
 
     @Test
-    public void personItemIsTransformed() {
+    void personItemIsTransformed() {
         Item item = transformer.getItemFromDisqualification(getDisqualification(), getData(true));
 
         assertThat(item.getAddress()).isEqualTo(ADDRESS);
@@ -64,7 +64,7 @@ public class DisqualificationItemTransformerTest {
     }
 
     @Test
-    public void corporateItemIsTransformer() {
+    void corporateItemIsTransformer() {
         when(companyNameUtils.splitCompanyName(COMPANY_NAME)).thenReturn(new CompanyName(COMPANY_START, COMPANY_ENDING));
 
         Item item = transformer.getItemFromDisqualification(getDisqualification(), getData(false));

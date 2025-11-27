@@ -3,7 +3,6 @@ package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -11,6 +10,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
+
 import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.processor.ResourceChangedProcessor;
 import uk.gov.companieshouse.logging.Logger;
@@ -19,12 +19,16 @@ import uk.gov.companieshouse.stream.ResourceChangedData;
 @Component
 public class DisqualifiedOfficersSearchConsumer {
 
+    private final Logger logger;
+
+    private final ResourceChangedProcessor processor;
+
     @Autowired
-    private Logger logger;
-    @Autowired
-    private ResourceChangedProcessor processor;
-    @Autowired
-    public KafkaTemplate<String, Object> kafkaTemplate;
+    public DisqualifiedOfficersSearchConsumer(Logger logger, ResourceChangedProcessor processor) {
+        super();
+        this.logger = logger;
+        this.processor = processor;
+    }
 
     /**
      * Receives Main topic messages.

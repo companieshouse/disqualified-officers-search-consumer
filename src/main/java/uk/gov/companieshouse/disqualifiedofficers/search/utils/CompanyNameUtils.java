@@ -22,7 +22,7 @@ public class CompanyNameUtils {
     }
 
     // Taken from CH-CompanyNameEndings
-    private final static String[] nameEndings = {
+    private static final String[] nameEndings = {
             "AEIE",
             "ANGHYFYNGEDIG",
             "C.B.C",

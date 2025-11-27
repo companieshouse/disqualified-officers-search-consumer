@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DisqualifiedPersonNameTest {
+class DisqualifiedPersonNameTest {
 
     private static final String TITLE = "title";
     private static final String FORENAME = "forename";
@@ -12,7 +12,7 @@ public class DisqualifiedPersonNameTest {
     private static final String SURNAME = "surname";
 
     @Test
-    public void disqualifiedPersonNameReturnsCorrectNames() {
+    void disqualifiedPersonNameReturnsCorrectNames() {
         DisqualifiedPersonName name = new DisqualifiedPersonName(TITLE, FORENAME, OTHER_FORENAMES, SURNAME);
 
         assertThat(name.getPersonName()).isEqualTo(FORENAME + " " + OTHER_FORENAMES + " " + SURNAME);
@@ -21,7 +21,7 @@ public class DisqualifiedPersonNameTest {
     }
 
     @Test
-    public void disqualifiedPersonNameWithNoTitleReturnsCorrectNames() {
+    void disqualifiedPersonNameWithNoTitleReturnsCorrectNames() {
         DisqualifiedPersonName name = new DisqualifiedPersonName("", FORENAME, OTHER_FORENAMES, SURNAME);
 
         assertThat(name.getPersonName()).isEqualTo(FORENAME + " " + OTHER_FORENAMES + " " + SURNAME);
@@ -30,7 +30,7 @@ public class DisqualifiedPersonNameTest {
     }
 
     @Test
-    public void disqualifiedPersonNameWithNullTitleReturnsCorrectNames() {
+    void disqualifiedPersonNameWithNullTitleReturnsCorrectNames() {
         DisqualifiedPersonName name = new DisqualifiedPersonName(null, FORENAME, OTHER_FORENAMES, SURNAME);
 
         assertThat(name.getPersonName()).isEqualTo(FORENAME + " " + OTHER_FORENAMES + " " + SURNAME);
@@ -39,7 +39,7 @@ public class DisqualifiedPersonNameTest {
     }
 
     @Test
-    public void disqualifiedPersonNameWithNoOtherForenamesReturnsCorrectNames() {
+    void disqualifiedPersonNameWithNoOtherForenamesReturnsCorrectNames() {
         DisqualifiedPersonName name = new DisqualifiedPersonName(TITLE, FORENAME, "", SURNAME);
 
         assertThat(name.getPersonName()).isEqualTo(FORENAME + " " + SURNAME);

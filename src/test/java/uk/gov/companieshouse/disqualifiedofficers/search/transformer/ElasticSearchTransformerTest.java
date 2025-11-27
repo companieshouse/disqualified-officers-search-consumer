@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ElasticSearchTransformerTest {
+class ElasticSearchTransformerTest {
 
     private static final String DATE_OF_BIRTH = "2000-01-01";
     private static final String LINK = "Link";
@@ -39,7 +39,7 @@ public class ElasticSearchTransformerTest {
     ElasticSearchTransformer transformer;
 
     @BeforeEach
-    private void setup() throws Exception {
+    void setup() throws Exception {
         setStreamTransformer();
     }
 
@@ -57,26 +57,30 @@ public class ElasticSearchTransformerTest {
         assertThat(actual.getKind()).isEqualTo("searchresults#disqualified-officer");
         assertThat(actual.getLinks().getSelf()).isEqualTo(LINK);
         assertThat(actual.getSortKey()).isEqualTo(KEY);
-        assertThat(actual.getItems().size()).isEqualTo(1);
+        assertThat(actual.getItems()).hasSize(1);
         assertThat(actual.getItems().get(0).getWildcardKey()).isEqualTo(KEY);
     }
 
     @Test
-    void throwsRetryableExceptionIfTransformErrors() {
+    void throwsRetryableExceptionIfTransformErrors() throws Exception {
         when(itemTransformer.getItemFromDisqualification(
                 any(Disqualification.class), any(StreamData.class))).thenThrow(new RuntimeException());
 
+        final ResourceChangedData resourceChangedData = getResourceChangedData(true);
+
         RetryableErrorException thrown = assertThrows(RetryableErrorException.class,
-                () -> transformer.getOfficerDisqualificationFromResourceChanged(getResourceChangedData(true)));
+                () -> transformer.getOfficerDisqualificationFromResourceChanged(resourceChangedData));
 
         assertThat(thrown.getMessage()).isEqualTo("Error when transforming stream data");
     }
 
     @Test
-    void throwsNonRetryableExceptionInvalidData() {
+    void throwsNonRetryableExceptionInvalidData() throws Exception {
+
+        final ResourceChangedData resourceChangedData = getResourceChangedData(false);
 
         NonRetryableErrorException thrown = assertThrows(NonRetryableErrorException.class,
-                () -> transformer.getOfficerDisqualificationFromResourceChanged(getResourceChangedData(false)));
+                () -> transformer.getOfficerDisqualificationFromResourceChanged(resourceChangedData));
 
         assertThat(thrown.getMessage()).isEqualTo("Error when extracting stream data");
     }

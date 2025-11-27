@@ -30,6 +30,6 @@ public class DisqualifiedPersonName {
     }
 
     private String groupNames(String... nameParts) {
-        return Stream.of(nameParts).filter(s -> s!= null && s.length() > 0).collect(Collectors.joining(" "));
+        return Stream.of(nameParts).filter(s -> s!= null && !s.isEmpty()).collect(Collectors.joining(" "));
     }
 }

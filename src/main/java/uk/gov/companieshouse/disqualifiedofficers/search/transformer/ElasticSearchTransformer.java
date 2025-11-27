@@ -14,10 +14,17 @@ public class ElasticSearchTransformer {
 
     private static final String RESOURCE_KIND = "searchresults#disqualified-officer";
 
+    private final StreamDataTransformer streamDataTransformer;
+
+    private final DisqualificationItemTransformer disqualificationItemTransformer;
+
     @Autowired
-    private StreamDataTransformer streamDataTransformer;
-    @Autowired
-    private DisqualificationItemTransformer disqualificationItemTransformer;
+    public ElasticSearchTransformer(StreamDataTransformer streamDataTransformer,
+            DisqualificationItemTransformer disqualificationItemTransformer) {
+        super();
+        this.streamDataTransformer = streamDataTransformer;
+        this.disqualificationItemTransformer = disqualificationItemTransformer;
+    }
 
     public OfficerDisqualification getOfficerDisqualificationFromResourceChanged(ResourceChangedData data) {
         StreamData streamData = streamDataTransformer.getStreamDataFromString(data.getData());

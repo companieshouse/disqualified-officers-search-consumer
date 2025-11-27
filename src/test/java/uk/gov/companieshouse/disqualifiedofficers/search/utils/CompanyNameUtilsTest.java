@@ -1,51 +1,28 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.utils;
 
-import org.junit.jupiter.api.Test;
-import uk.gov.companieshouse.disqualifiedofficers.search.model.CompanyName;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CompanyNameUtilsTest {
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-    private CompanyNameUtils utils = new CompanyNameUtils();
+import uk.gov.companieshouse.disqualifiedofficers.search.model.CompanyName;
 
-    @Test
-    public void companyNameSplitCorrectly() {
-        String name = "Test Limited";
+class CompanyNameUtilsTest {
 
-        CompanyName companyName = utils.splitCompanyName(name);
+    @ParameterizedTest
+    @CsvSource({
+        "Test Limited,Test,Limited", 
+        "TestLimited,TestLimited,''", 
+        "Test CWMNI BUDDIANT CYMUNEDOL C.C.C,Test,CWMNI BUDDIANT CYMUNEDOL C.C.C",
+        "Test COMMUNITY INTEREST PLC,Test,COMMUNITY INTEREST PLC"
+    })
+    void splitCompanyName(String companyNameStr, String name, String ending) {
+        CompanyNameUtils utils = new CompanyNameUtils();
+        
+        CompanyName companyName = utils.splitCompanyName(companyNameStr);
 
-        assertThat(companyName.getName()).isEqualTo("Test");
-        assertThat(companyName.getEnding()).isEqualTo("Limited");
+        assertThat(companyName.getName()).isEqualTo(name);
+        assertThat(companyName.getEnding()).isEqualTo(ending);
     }
-
-    @Test
-    public void companyNameWithoutSpaceNotSplit() {
-        String name = "TestLimited";
-
-        CompanyName companyName = utils.splitCompanyName(name);
-
-        assertThat(companyName.getName()).isEqualTo("TestLimited");
-        assertThat(companyName.getEnding()).isEqualTo("");
-    }
-
-    @Test
-    public void companyNameWithLargerEndSplitCorrectly() {
-        String name = "Test CWMNI BUDDIANT CYMUNEDOL C.C.C";
-
-        CompanyName companyName = utils.splitCompanyName(name);
-
-        assertThat(companyName.getName()).isEqualTo("Test");
-        assertThat(companyName.getEnding()).isEqualTo("CWMNI BUDDIANT CYMUNEDOL C.C.C");
-    }
-
-    @Test
-    public void companyNameWithLargerEndSplitCorrectlyShortAfterLongInArray() {
-        String name = "Test COMMUNITY INTEREST PLC";
-
-        CompanyName companyName = utils.splitCompanyName(name);
-
-        assertThat(companyName.getName()).isEqualTo("Test");
-        assertThat(companyName.getEnding()).isEqualTo("COMMUNITY INTEREST PLC");
-    }
+    
 }
