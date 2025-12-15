@@ -132,8 +132,8 @@ public class DisqualificationSearchSteps {
     @Then("a PUT request is sent to the search api with the correct body")
     public void putRequestIsSentToTheSearchApi() {
         List<ServeEvent> serverEvents = getServeEvents();
-        assertThat(serverEvents.isEmpty()).isFalse();
-        assertThat(serverEvents.size()).isEqualTo(1);
+        assertThat(serverEvents).isNotEmpty();
+        assertThat(serverEvents).hasSize(1);
         assertThat(serverEvents.get(0).getRequest().getUrl()).isEqualTo(String.format(DISQUALIFICATION_RESOURCE_URI, this.officerId));
         String expectedBody = "";
         try {
@@ -156,8 +156,8 @@ public class DisqualificationSearchSteps {
     @Then("a DELETE request is sent to the search Api")
     public void deleteRequestIsSentToTheSearchApi() {
         List<ServeEvent> serverEvents = getServeEvents();
-        assertThat(serverEvents.isEmpty()).isFalse();
-        assertThat(serverEvents.size()).isEqualTo(1);
+        assertThat(serverEvents).isNotEmpty();
+        assertThat(serverEvents).hasSize(1);
         assertThat(serverEvents.get(0).getRequest().getUrl()).isEqualTo(String.format(DISQUALIFICATION_DELETE_URI, this.officerId));
 
         verify(1, deleteRequestedFor(urlMatching("/disqualified-search/delete/" + officerId)));

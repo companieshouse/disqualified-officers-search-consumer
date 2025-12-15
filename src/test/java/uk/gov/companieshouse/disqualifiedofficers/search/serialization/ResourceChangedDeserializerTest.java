@@ -27,7 +27,7 @@ class ResourceChangedDeserializerTest {
             97, 110, 103, 101, 100, 0};
 
     @BeforeEach
-    public void init() {
+    void init() {
         deserializer = new ResourceChangedDeserializer();
     }
 

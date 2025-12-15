@@ -16,6 +16,8 @@ import uk.gov.companieshouse.stream.ResourceChangedData;
 @Component
 public class ResourceChangedSerializer implements Serializer<Object> {
 
+    private static final byte[] EMPTY_ARRAY = new byte[0];
+
     private final Logger logger;
 
     @Autowired
@@ -29,13 +31,12 @@ public class ResourceChangedSerializer implements Serializer<Object> {
 
         try {
             if (payload == null) {
-                return null;
+                return EMPTY_ARRAY;
             }
-            if (payload instanceof byte[]) {
-                return (byte[]) payload;
+            if (payload instanceof byte[] byteArray) {
+                return byteArray;
             }
-            if (payload instanceof ResourceChangedData) {
-                ResourceChangedData resourceChangedData = (ResourceChangedData) payload;
+            if (payload instanceof ResourceChangedData resourceChangedData) {
                 DatumWriter<ResourceChangedData> writer = new SpecificDatumWriter<>();
                 EncoderFactory encoderFactory = EncoderFactory.get();
 

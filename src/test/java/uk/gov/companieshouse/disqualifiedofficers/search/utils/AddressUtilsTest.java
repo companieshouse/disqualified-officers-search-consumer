@@ -6,7 +6,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AddressUtilsTest {
+class AddressUtilsTest {
 
     private String careOf = "care of";
     private String poBox = "po box";
@@ -21,7 +21,7 @@ public class AddressUtilsTest {
     private AddressUtils utils = new AddressUtils();
 
     @Test
-    public void getAddressAsStringReturnAddressStringNumberPremise() throws Exception {
+    void getAddressAsStringReturnAddressStringNumberPremise() throws Exception {
         Object address = getAddress();
 
         String addressLine = utils.getAddressAsString(address);
@@ -32,7 +32,7 @@ public class AddressUtilsTest {
     }
 
     @Test
-    public void getAddressAsStringReturnAddressStringWordPremise() throws Exception {
+    void getAddressAsStringReturnAddressStringWordPremise() throws Exception {
         premise = "Test";
         Object address = getAddress();
 
@@ -44,7 +44,7 @@ public class AddressUtilsTest {
     }
 
     @Test
-    public void getAddressAsStringReturnAddressStringNoPremise() throws Exception {
+    void getAddressAsStringReturnAddressStringNoPremise() throws Exception {
         premise = "";
         Object address = getAddress();
 
@@ -56,7 +56,7 @@ public class AddressUtilsTest {
     }
 
     @Test
-    public void getAddressAsStringReturnAddressStringNoAddressLine1() throws Exception {
+    void getAddressAsStringReturnAddressStringNoAddressLine1() throws Exception {
         addressLine1 = "";
         Object address = getAddress();
 

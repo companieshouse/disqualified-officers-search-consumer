@@ -15,7 +15,7 @@ public abstract class BaseApiClientServiceImpl {
 
     protected Logger logger;
 
-    protected BaseApiClientServiceImpl(final Logger logger) {
+    protected BaseApiClientServiceImpl(Logger logger) {
         this.logger = logger;
     }
 
