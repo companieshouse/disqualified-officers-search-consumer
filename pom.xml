@@ -65,6 +65,7 @@
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <commons-compress.version>1.28.0</commons-compress.version>
+        <plexus-utils.version>4.0.2</plexus-utils.version>
     </properties>
 
     <profiles>
@@ -118,6 +119,13 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
                 <version>${commons-compress.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>${plexus-utils.version}</version>
                 <scope>compile</scope>
             </dependency>
         </dependencies>
