@@ -66,6 +66,7 @@
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <plexus-utils.version>4.0.2</plexus-utils.version>
+        <logback.version>1.5.29</logback.version>
     </properties>
 
     <profiles>
@@ -128,6 +129,19 @@
                 <version>${plexus-utils.version}</version>
                 <scope>compile</scope>
             </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -170,12 +184,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
