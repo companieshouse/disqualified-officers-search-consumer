@@ -63,6 +63,7 @@
         <sonar.projectKey>uk.gov.companieshouse:disqualified-officers-search-consumer</sonar.projectKey>
 
         <argLine>-Dfile.encoding=UTF-8</argLine>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
     </properties>
 
     <profiles>
@@ -91,6 +92,11 @@
                 <version>${spring-boot-starter.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
         </dependencies>
