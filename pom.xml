@@ -69,6 +69,7 @@
         <plexus-utils.version>4.0.2</plexus-utils.version>
         <logback.version>1.5.29</logback.version>
         <guava.version>33.5.0-android</guava.version>
+        <log4j-api.version>2.25.3</log4j-api.version>
     </properties>
 
     <profiles>
@@ -149,6 +150,13 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j-api.version}</version>
                 <scope>compile</scope>
             </dependency>
         </dependencies>
