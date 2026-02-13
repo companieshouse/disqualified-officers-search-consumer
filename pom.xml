@@ -33,7 +33,7 @@
         <github-tomakehurst.version>3.0.1</github-tomakehurst.version>
         <structured-logging.version>3.0.49</structured-logging.version>
         <private-api-sdk-java.version>4.0.280</private-api-sdk-java.version>
-        <api-sdk-manager-java-library.version>3.0.6</api-sdk-manager-java-library.version>
+        <api-sdk-manager-java-library.version>3.0.15</api-sdk-manager-java-library.version>
         <test-containers.version>1.21.4</test-containers.version>
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
         <apache-avro.version>1.12.0</apache-avro.version>
