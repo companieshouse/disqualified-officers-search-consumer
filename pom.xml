@@ -36,7 +36,7 @@
         <api-sdk-manager-java-library.version>3.0.15</api-sdk-manager-java-library.version>
         <test-containers.version>1.21.4</test-containers.version>
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
-        <apache-avro.version>1.12.0</apache-avro.version>
+        <apache-avro.version>1.12.1</apache-avro.version>
         <commons-io.version>2.19.0</commons-io.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <tomcat-embed-core.version>11.0.18</tomcat-embed-core.version>
@@ -274,6 +274,10 @@
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-webapp</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -281,6 +285,12 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>ch-kafka</artifactId>
             <version>${ch-kafka.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
