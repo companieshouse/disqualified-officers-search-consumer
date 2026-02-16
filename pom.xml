@@ -42,7 +42,7 @@
         <tomcat-embed-core.version>11.0.18</tomcat-embed-core.version>
         <kafka-clients.version>3.9.1</kafka-clients.version>
         <spring-web.version>6.2.8</spring-web.version>
-        <assertj-core.version>4.0.0-M1</assertj-core.version>
+        <assertj-core.version>3.27.7</assertj-core.version>
 
         <opentelemetry-instrumentation-bom.version>2.16.0</opentelemetry-instrumentation-bom.version>
 
