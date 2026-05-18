@@ -15,14 +15,14 @@
 
     <properties>
         <java.version>21</java.version>
-        <spring-boot-starter.version>3.5.9</spring-boot-starter.version>
-        <spring-context.version>6.2.8</spring-context.version>
+        <spring-boot-starter.version>3.5.14</spring-boot-starter.version>
+        <spring-context.version>6.2.18</spring-context.version>
 
         <main.class>uk.gov.companieshouse.disqualifiedofficers.search.DisqualifiedOfficersSearchConsumerApplication</main.class>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
         <maven-build-helper-plugin.version>3.6.0</maven-build-helper-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
@@ -33,18 +33,21 @@
         <github-tomakehurst.version>3.0.1</github-tomakehurst.version>
         <structured-logging.version>3.0.49</structured-logging.version>
         <private-api-sdk-java.version>4.0.280</private-api-sdk-java.version>
-        <api-sdk-manager-java-library.version>3.0.15</api-sdk-manager-java-library.version>
+        <api-sdk-manager-java-library.version>3.0.22</api-sdk-manager-java-library.version>
         <test-containers.version>1.21.4</test-containers.version>
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
         <apache-avro.version>1.12.1</apache-avro.version>
         <commons-io.version>2.19.0</commons-io.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
-        <tomcat-embed-core.version>11.0.18</tomcat-embed-core.version>
-        <kafka-clients.version>3.9.1</kafka-clients.version>
-        <spring-web.version>6.2.8</spring-web.version>
+        <tomcat-embed-core.version>11.0.22</tomcat-embed-core.version>
+        <tomcat-embed-websocket.version>11.0.22</tomcat-embed-websocket.version>
+        <kafka-clients.version>3.9.2</kafka-clients.version>
+        <spring-web.version>6.2.18</spring-web.version>
         <assertj-core.version>3.27.7</assertj-core.version>
 
-        <opentelemetry-instrumentation-bom.version>2.16.0</opentelemetry-instrumentation-bom.version>
+        <opentelemetry-instrumentation-bom.version>2.14.0</opentelemetry-instrumentation-bom.version>
+        <io.grpc.version>1.80.0</io.grpc.version>
+        <kotlin-lib.version>2.2.21</kotlin-lib.version>
 
         <!-- Docker -->
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
@@ -69,7 +72,7 @@
         <plexus-utils.version>4.0.2</plexus-utils.version>
         <logback.version>1.5.29</logback.version>
         <guava.version>33.5.0-android</guava.version>
-        <log4j-api.version>2.25.3</log4j-api.version>
+        <log4j-api.version>2.25.4</log4j-api.version>
     </properties>
 
     <profiles>
@@ -159,6 +162,31 @@
                 <version>${log4j-api.version}</version>
                 <scope>compile</scope>
             </dependency>
+            <!-- CVE-2026-33186 -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-context</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
+                <version>${kotlin-lib.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk7</artifactId>
+                <version>${kotlin-lib.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+                <version>${kotlin-lib.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -174,6 +202,12 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
             <version>${tomcat-embed-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-websocket</artifactId>
+            <version>${tomcat-embed-websocket.version}</version>
         </dependency>
 
         <dependency>
@@ -196,21 +230,45 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-stdlib-common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -221,6 +279,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
