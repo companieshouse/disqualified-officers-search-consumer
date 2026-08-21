@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.BackOff;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.DltStrategy;
@@ -8,7 +9,6 @@ import org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 
 import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
@@ -34,7 +34,7 @@ public class DisqualifiedOfficersSearchConsumer {
      * Receives Main topic messages.
      */
     @RetryableTopic(attempts = "${disqualified-officers.search.retry-attempts}",
-            backoff = @Backoff(delayExpression = "${disqualified-officers.search.backoff-delay}"),
+            backOff = @BackOff(delayString = "${disqualified-officers.search.backoff-delay}"),
             sameIntervalTopicReuseStrategy = SameIntervalTopicReuseStrategy.SINGLE_TOPIC,
             dltTopicSuffix = "${disqualified-officers.search.error-suffix}",
             retryTopicSuffix = "${disqualified-officers.search.retry-suffix}",
