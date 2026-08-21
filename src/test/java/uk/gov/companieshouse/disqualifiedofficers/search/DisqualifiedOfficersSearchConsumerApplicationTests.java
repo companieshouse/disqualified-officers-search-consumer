@@ -7,9 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
+@EmbeddedKafka
 class DisqualifiedOfficersSearchConsumerApplicationTests {
 
     @Autowired
