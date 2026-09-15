@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.service.api;
 
+import consumer.exception.NonRetryableErrorException;
+import consumer.exception.RetryableErrorException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -7,8 +9,6 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.Executor;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
 import uk.gov.companieshouse.logging.Logger;
 
 public abstract class BaseApiClientServiceImpl {

@@ -1,5 +1,13 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.transformer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import consumer.exception.NonRetryableErrorException;
+import consumer.exception.RetryableErrorException;
+import java.lang.reflect.Field;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,18 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.disqualification.Disqualification;
 import uk.gov.companieshouse.api.disqualification.Item;
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.model.StreamData;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.stream.ResourceChangedData;
-
-import java.lang.reflect.Field;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ElasticSearchTransformerTest {

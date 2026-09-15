@@ -2,9 +2,9 @@ package uk.gov.companieshouse.disqualifiedofficers.search.transformer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import consumer.exception.NonRetryableErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.model.StreamData;
 import uk.gov.companieshouse.logging.Logger;
 

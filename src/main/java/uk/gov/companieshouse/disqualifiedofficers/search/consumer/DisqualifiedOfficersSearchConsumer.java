@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.consumer;
 
+import consumer.exception.NonRetryableErrorException;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.BackOff;
@@ -11,7 +12,6 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.processor.ResourceChangedProcessor;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.stream.ResourceChangedData;

@@ -1,7 +1,14 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.service.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException.Builder;
+import consumer.exception.NonRetryableErrorException;
+import consumer.exception.RetryableErrorException;
+import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,15 +18,7 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.Executor;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableErrorException;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
 import uk.gov.companieshouse.logging.Logger;
-
-import java.util.HashMap;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BaseApiClientServiceImplTest {
