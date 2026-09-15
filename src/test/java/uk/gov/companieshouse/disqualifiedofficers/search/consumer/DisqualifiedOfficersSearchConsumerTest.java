@@ -37,7 +37,7 @@ class DisqualifiedOfficersSearchConsumerTest {
     private DisqualifiedOfficersSearchConsumer consumer;
 
     @Test
-    void shouldReceiveMainMessageSuccessfully() throws Exception {
+    void shouldReceiveMainMessageSuccessfully() {
         // Arrange
         when(message.getPayload()).thenReturn(resourceChangedData);
 
@@ -50,7 +50,7 @@ class DisqualifiedOfficersSearchConsumerTest {
     }
 
     @Test
-    void shouldThrowAndLogExceptionWhenProcessorThrowsNonRetryableException() throws Exception {
+    void shouldThrowAndLogExceptionWhenProcessorThrowsNonRetryableException() {
         // Arrange
         when(message.getPayload()).thenReturn(resourceChangedData);
         NonRetryableErrorException exception = new NonRetryableErrorException("Non retryable error");
@@ -68,7 +68,7 @@ class DisqualifiedOfficersSearchConsumerTest {
     }
 
     @Test
-    void shouldThrowAndLogExceptionWhenProcessorThrowsRetryableException() throws Exception {
+    void shouldThrowAndLogExceptionWhenProcessorThrowsRetryableException() {
         // Arrange
         when(message.getPayload()).thenReturn(resourceChangedData);
         RuntimeException exception = new RuntimeException("Retryable error");
@@ -86,7 +86,7 @@ class DisqualifiedOfficersSearchConsumerTest {
     }
 
     @Test
-    void shouldLogMessageReceivedOnMainTopic() throws Exception {
+    void shouldLogMessageReceivedOnMainTopic() {
         // Arrange
         when(message.getPayload()).thenReturn(resourceChangedData);
 
@@ -100,7 +100,7 @@ class DisqualifiedOfficersSearchConsumerTest {
     }
 
     @Test
-    void shouldRethrowExceptionAfterLogging() throws Exception {
+    void shouldRethrowExceptionAfterLogging() {
         // Arrange
         when(message.getPayload()).thenReturn(resourceChangedData);
         RuntimeException exception = new RuntimeException("Test exception");
