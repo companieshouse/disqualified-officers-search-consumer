@@ -11,7 +11,7 @@ import uk.gov.companieshouse.disqualifiedofficers.search.exception.NonRetryableE
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
 @Component
-public class ResourceChangedDeserializer implements Deserializer<ResourceChangedData> {
+public class ResourceChangedDataDeserializer implements Deserializer<ResourceChangedData> {
 
     @Override
     public ResourceChangedData deserialize(String topic, byte[] data) {

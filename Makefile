@@ -1,5 +1,5 @@
 artifact_name       := disqualified-officers-search-consumer
-version             := "unversioned"
+version             := latest
 
 .PHONY: all
 all: build
@@ -45,11 +45,3 @@ endif
 
 .PHONY: dist
 dist: clean build package
-
-.PHONY: sonar
-sonar:
-	mvn sonar:sonar
-
-.PHONY: sonar-pr-analysis
-sonar-pr-analysis:
-	mvn sonar:sonar -P sonar-pr-analysis

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class ResourceChangedDeserializerTest {
 
-    private ResourceChangedDeserializer deserializer;
+    private ResourceChangedDataDeserializer deserializer;
 
     private static final byte[] serialized = {26, 114, 101, 115, 111, 117, 114, 99, 101, 95, 107,
             105, 110, 100, 24, 114, 101, 115, 111, 117, 114, 99, 101, 95, 117, 114, 105, 20, 99,
@@ -28,7 +28,7 @@ class ResourceChangedDeserializerTest {
 
     @BeforeEach
     void init() {
-        deserializer = new ResourceChangedDeserializer();
+        deserializer = new ResourceChangedDataDeserializer();
     }
 
     @Test

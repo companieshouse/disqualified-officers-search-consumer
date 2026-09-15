@@ -26,11 +26,11 @@ class ResourceChangedSerializerTest {
             97, 116, 8, 116, 121, 112, 101, 2, 2, 28, 102, 105, 101, 108, 100, 115, 95, 99, 104,
             97, 110, 103, 101, 100, 0};
 
-    private ResourceChangedSerializer serializer;
+    private ResourceChangedDataSerializer serializer;
 
     @BeforeEach
     void init() {
-        serializer = new ResourceChangedSerializer(logger);
+        serializer = new ResourceChangedDataSerializer(logger);
     }
 
     @Test

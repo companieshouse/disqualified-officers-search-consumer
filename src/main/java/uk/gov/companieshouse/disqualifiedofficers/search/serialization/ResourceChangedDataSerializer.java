@@ -14,14 +14,14 @@ import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
 @Component
-public class ResourceChangedSerializer implements Serializer<Object> {
+public class ResourceChangedDataSerializer implements Serializer<Object> {
 
     private static final byte[] EMPTY_ARRAY = new byte[0];
 
     private final Logger logger;
 
     @Autowired
-    public ResourceChangedSerializer(Logger logger) {
+    public ResourceChangedDataSerializer(Logger logger) {
         this.logger = logger;
     }
 
