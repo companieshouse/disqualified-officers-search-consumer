@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
-class DisqualifiedOfficersSearchConsumerApplicationTests {
+class ApplicationTests {
 
     @Autowired
     Logger logger;

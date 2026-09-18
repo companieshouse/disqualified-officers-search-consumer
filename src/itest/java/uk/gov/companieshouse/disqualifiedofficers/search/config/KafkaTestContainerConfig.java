@@ -23,19 +23,19 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableTopicErrorInterceptor;
-import uk.gov.companieshouse.disqualifiedofficers.search.serialization.ResourceChangedDeserializer;
-import uk.gov.companieshouse.disqualifiedofficers.search.serialization.ResourceChangedSerializer;
+import uk.gov.companieshouse.disqualifiedofficers.search.serialization.ResourceChangedDataDeserializer;
+import uk.gov.companieshouse.disqualifiedofficers.search.serialization.ResourceChangedDataSerializer;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 
 @TestConfiguration
 public class KafkaTestContainerConfig {
 
-    private final ResourceChangedDeserializer resourceChangedDeserializer;
-    private final ResourceChangedSerializer resourceChangedSerializer;
+    private final ResourceChangedDataDeserializer resourceChangedDeserializer;
+    private final ResourceChangedDataSerializer resourceChangedSerializer;
 
     @Autowired
-    public KafkaTestContainerConfig(ResourceChangedDeserializer resourceChangedDeserializer,
-                                    ResourceChangedSerializer resourceChangedSerializer) {
+    public KafkaTestContainerConfig(ResourceChangedDataDeserializer resourceChangedDeserializer,
+                                    ResourceChangedDataSerializer resourceChangedSerializer) {
         this.resourceChangedDeserializer = resourceChangedDeserializer;
         this.resourceChangedSerializer = resourceChangedSerializer;
     }
@@ -70,7 +70,7 @@ public class KafkaTestContainerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
-        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, ResourceChangedDeserializer.class);
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, ResourceChangedDataDeserializer.class);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
@@ -82,7 +82,7 @@ public class KafkaTestContainerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaContainer.getBootstrapServers());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ResourceChangedSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ResourceChangedDataSerializer.class);
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
                 RetryableTopicErrorInterceptor.class.getName());
         return new DefaultKafkaProducerFactory<>(

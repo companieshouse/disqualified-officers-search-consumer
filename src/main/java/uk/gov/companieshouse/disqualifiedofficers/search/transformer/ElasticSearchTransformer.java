@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.transformer;
 
+import consumer.exception.RetryableErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.disqualification.DateOfBirth;
 import uk.gov.companieshouse.api.disqualification.Disqualification;
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
-import uk.gov.companieshouse.disqualifiedofficers.search.exception.RetryableErrorException;
 import uk.gov.companieshouse.disqualifiedofficers.search.model.StreamData;
 import uk.gov.companieshouse.stream.ResourceChangedData;
 

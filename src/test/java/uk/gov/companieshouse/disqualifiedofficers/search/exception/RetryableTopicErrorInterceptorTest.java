@@ -1,51 +1,177 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.exception;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_CAUSE_FQCN;
+import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_STACKTRACE;
 
+import consumer.exception.NonRetryableErrorException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.kafka.support.KafkaHeaders.EXCEPTION_CAUSE_FQCN;
-
+@ExtendWith(MockitoExtension.class)
 class RetryableTopicErrorInterceptorTest {
 
-    private RetryableTopicErrorInterceptor interceptor;
+    private RetryableTopicErrorInterceptor underTest;
 
     @BeforeEach
-    void setUp(){
-        interceptor = new RetryableTopicErrorInterceptor();
+    void setUp() {
+        underTest = new RetryableTopicErrorInterceptor();
     }
 
     @Test
-    void when_correct_topic_is_sent_record_is_unchanged() {
-        ProducerRecord<String, Object> aRecord = createRecord("topic", "header");
-        ProducerRecord<String, Object> newRecord = interceptor.onSend(aRecord);
+    void onSend_shouldReturnOriginalMessage_whenTopicIsNotErrorTopic() {
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search", "key", "value");
 
-        assertThat(newRecord).isEqualTo(aRecord);
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertSame(message, result);
     }
 
     @Test
-    void when_error_is_nonretryable_topic_is_set_to_invalid() {
-        ProducerRecord<String, Object> aRecord = createRecord("topic-error", NonRetryableErrorException.class.getName());
-        ProducerRecord<String, Object> newRecord = interceptor.onSend(aRecord);
-
-        assertThat(newRecord.topic()).isEqualTo("topic-invalid");
-    }
-
-    @Test
-    void when_error_is_retryable_topic_is_unchanged() {
-        ProducerRecord<String, Object> aRecord = createRecord("topic-error", RetryableErrorException.class.getName());
-        ProducerRecord<String, Object> newRecord = interceptor.onSend(aRecord);
-
-        assertThat(newRecord.topic()).isEqualTo("topic-error");
-    }
-
-    public ProducerRecord<String, Object> createRecord(String topic, String header) {
-        Object recordObj = new Object();
+    void onSend_shouldReturnInvalidTopic_whenCauseHeaderContainsNonRetryableException() {
         RecordHeaders headers = new RecordHeaders();
-        headers.add(EXCEPTION_CAUSE_FQCN, header.getBytes());
-        return new ProducerRecord<>(topic, 1,1L ,null, recordObj, headers);
+        headers.add(EXCEPTION_CAUSE_FQCN, NonRetryableErrorException.class.getName().getBytes(StandardCharsets.UTF_8));
+
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search-error",
+                null,"key","value", headers);
+
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertNotSame(message, result);
+        assertEquals("company-search-invalid", result.topic());
+        assertEquals("key", result.key());
+        assertEquals("value", result.value());
+    }
+
+    @Test
+    void onSend_shouldReturnInvalidTopic_whenStackTraceHeaderContainsNonRetryableException() {
+        RecordHeaders headers = new RecordHeaders();
+        headers.add(EXCEPTION_STACKTRACE, ("some stack trace: "+ NonRetryableErrorException.class.getName()
+                + ": invalid data").getBytes(StandardCharsets.UTF_8));
+
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search-error",
+                null,"key","value", headers);
+
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertNotSame(message, result);
+        assertEquals("company-search-invalid", result.topic());
+        assertEquals("key", result.key());
+        assertEquals("value", result.value());
+    }
+
+    @Test
+    void onSend_shouldReturnOriginalMessage_whenNoExceptionHeadersExist() {
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search-error", "key", "value");
+
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertSame(message, result);
+    }
+
+    @Test
+    void onSend_shouldReturnOriginalMessage_whenCauseHeaderDoesNotContainNonRetryableException() {
+        RecordHeaders headers = new RecordHeaders();
+        headers.add(EXCEPTION_CAUSE_FQCN, "some.other.Exception".getBytes(StandardCharsets.UTF_8));
+
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search-error",
+                        null, "key", "value", headers);
+
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertSame(message, result);
+    }
+
+    @Test
+    void onSend_shouldReturnOriginalMessage_whenStackTraceDoesNotContainNonRetryableException() {
+        RecordHeaders headers = new RecordHeaders();
+        headers.add(EXCEPTION_STACKTRACE, "some.other.Exception: something went wrong".getBytes(StandardCharsets.UTF_8));
+
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search-error",
+                null, "key", "value", headers);
+
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertSame(message, result);
+    }
+
+    @Test
+    void onSend_shouldReturnInvalidTopic_whenBothHeadersExistAndCauseIsNonRetryable() {
+        RecordHeaders headers = new RecordHeaders();
+
+        headers.add(EXCEPTION_CAUSE_FQCN, NonRetryableErrorException.class.getName().getBytes(StandardCharsets.UTF_8));
+        headers.add(EXCEPTION_STACKTRACE, "some.other.Exception".getBytes(StandardCharsets.UTF_8));
+
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search-error",
+                null,"key","value", headers);
+
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertNotSame(message, result);
+        assertEquals("company-search-invalid", result.topic());
+    }
+
+    @Test
+    void onSend_shouldReturnInvalidTopic_whenBothHeadersExistAndStackTraceIsNonRetryable() {
+        RecordHeaders headers = new RecordHeaders();
+
+        headers.add(EXCEPTION_CAUSE_FQCN, "some.other.Exception".getBytes(StandardCharsets.UTF_8));
+        headers.add(EXCEPTION_STACKTRACE, NonRetryableErrorException.class.getName().getBytes(StandardCharsets.UTF_8));
+
+        ProducerRecord<String, Object> message = new ProducerRecord<>("company-search-error",
+                null,"key","value", headers);
+
+        ProducerRecord<String, Object> result = underTest.onSend(message);
+
+        assertNotSame(message, result);
+        assertEquals("company-search-invalid", result.topic());
+    }
+
+    @Test
+    void onAcknowledgement_shouldNotThrowException() {
+        RecordMetadata metadata = mock(RecordMetadata.class);
+        Exception exception = new RuntimeException("test");
+
+        underTest.onAcknowledgement(metadata, exception);
+
+        verify(metadata, times(1)).topic();
+    }
+
+    @Test
+    void onAcknowledgement_shouldNotThrowException_whenExceptionIsNull() {
+        RecordMetadata metadata = mock(RecordMetadata.class);
+
+        underTest.onAcknowledgement(metadata, null);
+
+        verify(metadata, times(1)).topic();
+    }
+
+    @Test
+    void close_shouldNotThrowException() {
+        assertDoesNotThrow(() -> underTest.close());
+    }
+
+    @Test
+    void configure_shouldNotThrowException() {
+        Map<String, Object> config = Collections.singletonMap("test", "value");
+
+        underTest.configure(config);
+
+        assertThat(config).containsEntry("test", "value");
     }
 }

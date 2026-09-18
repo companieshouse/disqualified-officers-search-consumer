@@ -1,5 +1,5 @@
 artifact_name       := disqualified-officers-search-consumer
-version             := "unversioned"
+version             := latest
 
 .PHONY: all
 all: build
@@ -30,6 +30,11 @@ test-unit: clean
 test-integration:
 	mvn integration-test -Dskip.unit.tests=true failsafe:verify
 
+
+.PHONY: docker-image
+docker-image: clean
+	mvn package -Dskip.unit.tests=true -Dskip.integration.tests=true jib:dockerBuild
+
 .PHONY: package
 package:
 ifndef version
@@ -45,11 +50,3 @@ endif
 
 .PHONY: dist
 dist: clean build package
-
-.PHONY: sonar
-sonar:
-	mvn sonar:sonar
-
-.PHONY: sonar-pr-analysis
-sonar-pr-analysis:
-	mvn sonar:sonar -P sonar-pr-analysis

@@ -1,9 +1,9 @@
 package uk.gov.companieshouse.disqualifiedofficers.search.processor;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-
 import uk.gov.companieshouse.api.disqualification.OfficerDisqualification;
 import uk.gov.companieshouse.disqualifiedofficers.search.service.api.ApiClientService;
 import uk.gov.companieshouse.disqualifiedofficers.search.transformer.ElasticSearchTransformer;
@@ -31,7 +31,7 @@ public class ResourceChangedProcessor {
         this.logger = logger;
     }
 
-    public void processResourceChanged(Message<ResourceChangedData> message) {
+    public void processResourceChanged(Message<@NonNull ResourceChangedData> message) {
         ResourceChangedData payload = message.getPayload();
         final String logContext = payload.getContextId();
         String officerId = payload.getResourceId();

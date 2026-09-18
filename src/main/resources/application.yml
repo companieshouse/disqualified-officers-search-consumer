@@ -11,6 +11,8 @@ management:
       health:
         enabled: true
         show-details: never
+        probes:
+          enabled: true
 
 spring:
   kafka:
@@ -32,6 +34,13 @@ disqualified-officers:
 
 logger:
   namespace: disqualified-officers-search-consumer
+
+logging:
+  level:
+    org.apache.kafka.clients: ${KAFKA_LOGGING_LEVEL:INFO}
+    org.apache.kafka: ${KAFKA_LOGGING_LEVEL:INFO}
+    org.springframework.kafka: ${KAFKA_LOGGING_LEVEL:INFO}
+    org.springframework.kafka.listener: ${KAFKA_LOGGING_LEVEL:INFO}
 
 wiremock:
   server:
